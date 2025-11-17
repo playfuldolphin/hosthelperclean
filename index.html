@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Helper - Cleaning Management for Rental Properties</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing-page">
+        <!-- Navigation -->
+        <nav class="landing-nav">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Host Helper Clean</span>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                    <div class="auth-buttons">
+                        <button class="btn btn-secondary" onclick="showLogin()">Log In</button>
+                        <button class="btn btn-primary" onclick="showSignup()">Sign Up Free</button>
+                    </div>
+                    <div class="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Professional Cleaning Management for Rental Hosts</h1>
+                    <p>Simplify your property cleaning operations with smart scheduling, team coordination, and automated checklists</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="showSignup()">
+                            Start Free Trial <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-outline btn-lg" onclick="watchDemo()">
+                            <i class="fas fa-play-circle"></i> Watch Demo
+                        </button>
+                    </div>
+                    <p class="hero-subtext">No credit card required • 14-day free trial</p>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-graphic">
+                        <i class="fas fa-clipboard-check"></i>
+                        <div class="feature-icons">
+                            <i class="fas fa-home"></i>
+                            <i class="fas fa-users"></i>
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="container">
+                <h2 class="section-title">Everything You Need to Manage Cleaning Operations</h2>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Custom Checklists</h3>
+                        <p>Create detailed cleaning checklists for each property with room-by-room tasks</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h3>Shareable Links</h3>
+                        <p>Generate unique links for cleaners to access and update checklists in real-time</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Multi-Property Support</h3>
+                        <p>Manage unlimited home rental properties from a single dashboard</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Smart Notifications</h3>
+                        <p>Get alerts when cleanings are completed or supplies are needed</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3>Supplies Tracking</h3>
+                        <p>Track inventory and let cleaners report what needs restocking</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Performance Analytics</h3>
+                        <p>Monitor cleaning times, completion rates, and property insights</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Add Your Properties</h3>
+                        <p>List all your home rental properties with their details and specific requirements</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Create Checklists</h3>
+                        <p>Build custom cleaning checklists for each property or use our templates</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Share with Cleaners</h3>
+                        <p>Send unique links to your cleaning team - no app download required</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Track Progress</h3>
+                        <p>Monitor cleaning status in real-time and get notified when tasks are complete</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing-section">
+            <div class="container">
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <p class="section-subtitle">Choose the plan that fits your business</p>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">19</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Up to 5 Properties</li>
+                            <li><i class="fas fa-check"></i> Unlimited Checklists</li>
+                            <li><i class="fas fa-check"></i> 3 Team Members</li>
+                            <li><i class="fas fa-check"></i> Basic Analytics</li>
+                            <li><i class="fas fa-check"></i> Email Support</li>
+                        </ul>
+                        <button class="btn btn-outline">Start Free Trial</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="popular-badge">Most Popular</div>
+                        <h3>Professional</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">49</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Up to 20 Properties</li>
+                            <li><i class="fas fa-check"></i> Unlimited Checklists</li>
+                            <li><i class="fas fa-check"></i> Unlimited Team Members</li>
+                            <li><i class="fas fa-check"></i> Advanced Analytics</li>
+                            <li><i class="fas fa-check"></i> Priority Support</li>
+                            <li><i class="fas fa-check"></i> Custom Branding</li>
+                        </ul>
+                        <button class="btn btn-primary">Start Free Trial</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">
+                            <span class="amount">Custom</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Unlimited Properties</li>
+                            <li><i class="fas fa-check"></i> Unlimited Everything</li>
+                            <li><i class="fas fa-check"></i> API Access</li>
+                            <li><i class="fas fa-check"></i> Dedicated Support</li>
+                            <li><i class="fas fa-check"></i> Custom Integrations</li>
+                            <li><i class="fas fa-check"></i> SLA Guarantee</li>
+                        </ul>
+                        <button class="btn btn-outline">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="logo">
+                            <i class="fas fa-hands-helping"></i>
+                            <span>Host Helper Clean</span>
+                        </div>
+                        <p>Professional cleaning management solutions for home rental hosts.</p>
+                    </div>
+                        <p>Streamline your home rental cleaning operations with our all-in-one management platform.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#">API Docs</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#blog">Blog</a></li>
+                            <li><a href="#careers">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#help">Help Center</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#status">Status</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Host Helper Clean. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content auth-modal">
+            <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <h2>Welcome Back</h2>
+                <p>Log in to manage your properties</p>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                </form>
+                <p class="auth-switch">
+                    Don't have an account? <a href="#" onclick="switchToSignup()">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <h2>Create Account</h2>
+                <p>Start your 14-day free trial</p>
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" required placeholder="••••••••">
+                        <small>At least 8 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name (Optional)</label>
+                        <input type="text" id="companyName" placeholder="Your Cleaning Company">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+                <p class="auth-switch">
+                    Already have an account? <a href="#" onclick="switchToLogin()">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard (Hidden by default) -->
+    <div id="dashboard" style="display: none;">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Host Helper</span>
+                    </div>
+                    <nav class="dashboard-nav">
+                        <a href="#" class="nav-link active" data-page="overview">
+                            <i class="fas fa-chart-line"></i> Overview
+                        </a>
+                        <a href="#" class="nav-link" data-page="properties">
+                            <i class="fas fa-building"></i> Properties
+                        </a>
+                        <a href="#" class="nav-link" data-page="checklists">
+                            <i class="fas fa-clipboard-list"></i> Checklists
+                        </a>
+                        <a href="#" class="nav-link" data-page="team">
+                            <i class="fas fa-users"></i> Team
+                        </a>
+                        <a href="#" class="nav-link" data-page="reports">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </a>
+                        <a href="#" class="nav-link" data-page="integrations">
+                            <i class="fas fa-plug"></i> Integrations
+                        </a>
+                        <a href="#" class="nav-link" data-page="billing">
+                            <i class="fas fa-file-invoice-dollar"></i> Billing
+                        </a>
+                    </nav>
+                    <div class="header-actions">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <div class="user-menu">
+                            <button class="user-menu-btn">
+                                <img src="images/avatar.png" alt="User" class="avatar">
+                                <span id="userName">John Doe</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#"><i class="fas fa-user"></i> Profile</a>
+                                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                                <a href="#"><i class="fas fa-credit-card"></i> Billing</a>
+                                <hr>
+                                <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="dashboard-content">
+            <div class="container">
+                <!-- Overview Page -->
+                <div id="overviewPage" class="dashboard-page active">
+                    <div class="page-header">
+                        <h1>Dashboard Overview</h1>
+                        <button class="btn btn-primary" onclick="showAddPropertyModal()">
+                            <i class="fas fa-plus"></i> Add Property
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Total Properties</h3>
+                                <p class="stat-value">12</p>
+                                <span class="stat-change positive">+2 this month</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Completed Cleanings</h3>
+                                <p class="stat-value">48</p>
+                                <span class="stat-change positive">+12% vs last week</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Pending Tasks</h3>
+                                <p class="stat-value">5</p>
+                                <span class="stat-change">Due today</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Avg. Cleaning Score</h3>
+                                <p class="stat-value">4.8</p>
+                                <span class="stat-change positive">Excellent</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="dashboard-section">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon completed">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Beach House Apt 2A</strong> cleaning completed</p>
+                                    <span class="activity-time">2 hours ago • Maria S.</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning">
+                                    <i class="fas fa-exclamation"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Downtown Loft</strong> needs supplies restocking</p>
+                                    <span class="activity-time">4 hours ago • Toilet paper, soap</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon pending">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Sunset Villa</strong> scheduled for cleaning</p>
+                                    <span class="activity-time">Tomorrow at 10:00 AM • John D.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Schedule -->
+                    <div class="dashboard-section">
+                        <h2>Today's Schedule</h2>
+                        <div class="schedule-grid">
+                            <div class="schedule-card">
+                                <div class="schedule-time">10:00 AM</div>
+                                <div class="schedule-details">
+                                    <h4>Beach House Apt 3B</h4>
+                                    <p>Standard cleaning • Maria S.</p>
+                                    <button class="btn btn-sm btn-outline">View Checklist</button>
+                                </div>
+                            </div>
+                            <div class="schedule-card">
+                                <div class="schedule-time">2:00 PM</div>
+                                <div class="schedule-details">
+                                    <h4>Mountain Cabin</h4>
+                                    <p>Deep clean • Team A</p>
+                                    <button class="btn btn-sm btn-outline">View Checklist</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties Page -->
+                <div id="propertiesPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>My Properties</h1>
+                        <div class="header-actions">
+                            <input type="text" class="search-input" placeholder="Search properties...">
+                            <button class="btn btn-primary" onclick="showAddPropertyModal()">
+                                <i class="fas fa-plus"></i> Add Property
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="properties-grid" id="propertiesGrid">
+                        <!-- Property cards will be dynamically generated -->
+                    </div>
+                </div>
+
+                <!-- Checklists Page -->
+                <div id="checklistsPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Cleaning Checklists</h1>
+                        <button class="btn btn-primary" onclick="showCreateChecklistModal()">
+                            <i class="fas fa-plus"></i> Create Checklist
+                        </button>
+                    </div>
+
+                    <div class="checklists-content">
+                        <div class="template-section">
+                            <h2>Templates</h2>
+                            <div class="template-cards">
+                                <div class="template-card" onclick="useTemplate('standard')">
+                                    <i class="fas fa-broom"></i>
+                                    <h3>Standard Cleaning</h3>
+                                    <p>Regular turnover checklist</p>
+                                </div>
+                                <div class="template-card" onclick="useTemplate('deep')">
+                                    <i class="fas fa-spray-can"></i>
+                                    <h3>Deep Cleaning</h3>
+                                    <p>Comprehensive monthly clean</p>
+                                </div>
+                                <div class="template-card" onclick="useTemplate('move-out')">
+                                    <i class="fas fa-truck"></i>
+                                    <h3>Move-out Cleaning</h3>
+                                    <p>End of lease thorough clean</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="active-checklists">
+                            <h2>Active Checklists</h2>
+                            <div id="activeChecklistsList">
+                                <!-- Active checklists will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Page -->
+                <div id="teamPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Team & Marketplace</h1>
+                        <div class="header-actions">
+                            <div class="view-toggle">
+                                <button class="toggle-btn active" onclick="switchTeamView('myteam')">My Team</button>
+                                <button class="toggle-btn" onclick="switchTeamView('marketplace')">Find Cleaners</button>
+                            </div>
+                            <button class="btn btn-primary" onclick="showInviteModal()">
+                                <i class="fas fa-user-plus"></i> Invite Team Member
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="myTeamView" class="team-view active">
+                        <div class="team-grid" id="teamGrid">
+                            <!-- Team members will be displayed here -->
+                        </div>
+                    </div>
+
+                    <div id="marketplaceView" class="team-view">
+                        <div class="marketplace-filters">
+                            <h3>Find Professional Cleaners</h3>
+                            <div class="filter-grid">
+                                <div class="filter-group">
+                                    <label>Location</label>
+                                    <input type="text" id="locationFilter" placeholder="City or ZIP code">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Availability</label>
+                                    <select id="availabilityFilter">
+                                        <option value="">Any day</option>
+                                        <option value="weekdays">Weekdays</option>
+                                        <option value="weekends">Weekends</option>
+                                        <option value="flexible">Flexible</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Rating</label>
+                                    <select id="ratingFilter">
+                                        <option value="">Any rating</option>
+                                        <option value="4.5">4.5+ stars</option>
+                                        <option value="4.0">4.0+ stars</option>
+                                        <option value="3.5">3.5+ stars</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Experience</label>
+                                    <select id="experienceFilter">
+                                        <option value="">Any experience</option>
+                                        <option value="1">1+ years</option>
+                                        <option value="3">3+ years</option>
+                                        <option value="5">5+ years</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" onclick="searchCleaners()">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="marketplace-results">
+                            <div class="results-header">
+                                <h3>Available Cleaners</h3>
+                                <select class="sort-select" onchange="sortCleaners(this.value)">
+                                    <option value="rating">Sort by Rating</option>
+                                    <option value="experience">Sort by Experience</option>
+                                    <option value="price">Sort by Price</option>
+                                    <option value="distance">Sort by Distance</option>
+                                </select>
+                            </div>
+                            <div id="marketplaceGrid" class="cleaner-cards">
+                                <!-- Marketplace cleaners will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrations Page -->
+                <div id="integrationsPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Booking Integrations</h1>
+                        <p class="page-subtitle">Connect your booking platforms for automated scheduling</p>
+                    </div>
+
+                    <div class="integrations-grid">
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <i class="fas fa-home integration-icon"></i>
+                                <h3>Property Channel 1</h3>
+                                <span class="integration-status connected">Connected</span>
+                            </div>
+                            <div class="integration-content">
+                                <p>Automatically sync bookings and create cleaning schedules</p>
+                                <div class="integration-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Properties</span>
+                                        <span class="stat-value">3</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Last Sync</span>
+                                        <span class="stat-value">2 mins ago</span>
+                                    </div>
+                                </div>
+                                <div class="integration-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="syncBookings('channel1')">
+                                        <i class="fas fa-sync"></i> Sync Now
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" onclick="configureIntegration('channel1')">
+                                        <i class="fas fa-cog"></i> Settings
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <img src="images/vrbo-logo.png" alt="VRBO" class="integration-logo">
+                                <h3>VRBO</h3>
+                                <span class="integration-status disconnected">Not Connected</span>
+                            </div>
+                            <div class="integration-content">
+                                <p>Connect VRBO to sync your vacation rental bookings</p>
+                                <button class="btn btn-primary btn-block" onclick="connectIntegration('vrbo')">
+                                    <i class="fas fa-link"></i> Connect VRBO
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <img src="images/booking-logo.png" alt="Booking.com" class="integration-logo">
+                                <h3>Booking.com</h3>
+                                <span class="integration-status disconnected">Not Connected</span>
+                            </div>
+                            <div class="integration-content">
+                                <p>Sync your Booking.com reservations automatically</p>
+                                <button class="btn btn-primary btn-block" onclick="connectIntegration('booking')">
+                                    <i class="fas fa-link"></i> Connect Booking.com
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <i class="fas fa-calendar-alt integration-icon"></i>
+                                <h3>iCal Import</h3>
+                                <span class="integration-status">Manual</span>
+                            </div>
+                            <div class="integration-content">
+                                <p>Import bookings from any calendar using iCal links</p>
+                                <button class="btn btn-primary btn-block" onclick="showIcalImport()">
+                                    <i class="fas fa-upload"></i> Import iCal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="automation-settings">
+                        <h2>Automation Rules</h2>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Auto-Schedule Cleanings</h4>
+                                    <p>Automatically create cleaning tasks when guests check out</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoSchedule" checked onchange="updateAutomationSetting('autoSchedule')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Same-Day Turnovers</h4>
+                                    <p>Schedule priority cleanings for same-day check-ins</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="sameDayPriority" checked onchange="updateAutomationSetting('sameDayPriority')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Cleaner Auto-Assignment</h4>
+                                    <p>Automatically assign cleaners based on availability</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoAssign" onchange="updateAutomationSetting('autoAssign')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Buffer Time</h4>
+                                    <p>Hours between checkout and cleaning</p>
+                                </div>
+                                <input type="number" id="bufferTime" value="2" min="0" max="24" class="setting-input" onchange="updateAutomationSetting('bufferTime')">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upcoming-bookings">
+                        <h2>Upcoming Bookings</h2>
+                        <div class="bookings-timeline" id="bookingsTimeline">
+                            <!-- Dynamic booking timeline will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Page -->
+                <div id="billingPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Billing & Invoices</h1>
+                        <button class="btn btn-primary" onclick="showCreateInvoiceModal()">
+                            <i class="fas fa-plus"></i> Create Invoice
+                        </button>
+                    </div>
+
+                    <div class="billing-stats">
+                        <div class="billing-card">
+                            <h3>This Month</h3>
+                            <p class="amount">$2,450</p>
+                            <span class="stat-label">12 cleanings</span>
+                        </div>
+                        <div class="billing-card">
+                            <h3>Outstanding</h3>
+                            <p class="amount">$650</p>
+                            <span class="stat-label">3 invoices</span>
+                        </div>
+                        <div class="billing-card">
+                            <h3>Paid</h3>
+                            <p class="amount">$1,800</p>
+                            <span class="stat-label">9 invoices</span>
+                        </div>
+                    </div>
+
+                    <div class="invoices-section">
+                        <div class="section-header">
+                            <h2>Recent Invoices</h2>
+                            <div class="filter-buttons">
+                                <button class="filter-btn active" onclick="filterInvoices('all')">All</button>
+                                <button class="filter-btn" onclick="filterInvoices('pending')">Pending</button>
+                                <button class="filter-btn" onclick="filterInvoices('paid')">Paid</button>
+                            </div>
+                        </div>
+                        <div class="invoices-list" id="invoicesList">
+                            <!-- Invoices will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reportsPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Reports & Analytics</h1>
+                        <div class="date-range-selector">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-calendar"></i> Last 30 Days
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-content">
+                        <p>Reports coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Cleaner Portal -->
+    <div id="cleanerPortal" style="display: none;">
+        <div class="cleaner-header">
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Host Helper</span>
+                </div>
+                <div class="cleaner-info">
+                    <span id="cleanerName">Cleaner Portal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cleaner-content">
+            <div class="container">
+                <div id="cleanerChecklistView">
+                    <!-- Checklist content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Property Modal -->
+    <div id="addPropertyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Property</h2>
+                <button class="close-btn" onclick="closeAddPropertyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addPropertyForm" onsubmit="handleAddProperty(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Property Name*</label>
+                            <input type="text" id="propName" required placeholder="e.g., Beach House Apt 2A">
+                        </div>
+                        <div class="form-group">
+                            <label>Property Type*</label>
+                            <select id="propType" required>
+                                <option value="">Select type</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="house">House</option>
+                                <option value="condo">Condo</option>
+                                <option value="studio">Studio</option>
+                                <option value="villa">Villa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Address*</label>
+                            <input type="text" id="propAddress" required placeholder="123 Main St, City, State">
+                        </div>
+                        <div class="form-group">
+                            <label>Unit/Apt Number</label>
+                            <input type="text" id="propUnit" placeholder="Apt 2A">
+                        </div>
+                        <div class="form-group">
+                            <label>Bedrooms*</label>
+                            <input type="number" id="propBedrooms" required min="0" placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms*</label>
+                            <input type="number" id="propBathrooms" required min="0" step="0.5" placeholder="1.5">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Special Instructions</label>
+                            <textarea id="propInstructions" rows="3" placeholder="Any special cleaning instructions or access codes"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeAddPropertyModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Property</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Invoice Modal -->
+    <div id="createInvoiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Invoice</h2>
+                <button class="close-btn" onclick="closeCreateInvoiceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createInvoiceForm" onsubmit="handleCreateInvoice(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Invoice Type</label>
+                            <select id="invoiceType" onchange="updateInvoiceForm(this.value)">
+                                <option value="property">Property Owner</option>
+                                <option value="cleaner">Cleaner Payment</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Date</label>
+                            <input type="date" id="invoiceDate" required value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+
+                    <div id="propertyInvoiceFields">
+                        <div class="form-group">
+                            <label>Select Property</label>
+                            <select id="invoiceProperty" onchange="loadPropertyCleanings(this.value)">
+                                <option value="">Choose a property</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Billing Period</label>
+                            <div class="date-range">
+                                <input type="date" id="periodStart" required>
+                                <span>to</span>
+                                <input type="date" id="periodEnd" required>
+                            </div>
+                        </div>
+
+                        <div class="cleanings-selection">
+                            <h3>Select Cleanings to Invoice</h3>
+                            <div id="cleaningsToInvoice">
+                                <!-- Completed cleanings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cleanerInvoiceFields" style="display: none;">
+                        <div class="form-group">
+                            <label>Select Cleaner</label>
+                            <select id="invoiceCleaner" onchange="loadCleanerWork(this.value)">
+                                <option value="">Choose a cleaner</option>
+                            </select>
+                        </div>
+
+                        <div class="cleaner-work-summary" id="cleanerWorkSummary">
+                            <!-- Cleaner work will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="invoice-summary">
+                        <h3>Invoice Summary</h3>
+                        <div class="summary-items" id="invoiceSummaryItems">
+                            <!-- Summary items will be added here -->
+                        </div>
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <span id="invoiceTotal">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea id="invoiceNotes" rows="3" placeholder="Any additional notes for this invoice..."></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeCreateInvoiceModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-file-invoice"></i> Generate Invoice
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Preview Modal -->
+    <div id="invoicePreviewModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Invoice Preview</h2>
+                <div class="invoice-actions">
+                    <button class="btn btn-sm btn-outline" onclick="printInvoice()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-sm btn-primary" onclick="downloadInvoice()">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="close-btn" onclick="closeInvoicePreview()">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="invoicePreview" class="invoice-preview">
+                    <!-- Invoice content will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cleaner Profile Modal -->
+    <div id="cleanerProfileModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="cleanerProfileName">Cleaner Profile</h2>
+                <button class="close-btn" onclick="closeCleanerProfile()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cleanerProfileContent">
+                    <!-- Profile content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Checklist Modal -->
+    <div id="createChecklistModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Create Cleaning Checklist</h2>
+                <button class="close-btn" onclick="closeCreateChecklistModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createChecklistForm" onsubmit="handleCreateChecklist(event)">
+                    <div class="checklist-setup">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Select Property*</label>
+                                <select id="checklistProperty" required>
+                                    <option value="">Choose a property</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Scheduled Date*</label>
+                                <input type="date" id="checklistDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Assigned Cleaner</label>
+                                <select id="checklistCleaner">
+                                    <option value="">Assign later</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Template</label>
+                                <select id="checklistTemplate" onchange="loadTemplateItems(this.value)">
+                                    <option value="standard">Standard Cleaning</option>
+                                    <option value="deep">Deep Cleaning</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checklist-builder">
+                        <h3>Checklist Items</h3>
+                        <div id="checklistItemsContainer">
+                            <!-- Checklist items will be loaded here -->
+                        </div>
+                        <button type="button" class="btn btn-outline" onclick="addCustomTask()">
+                            <i class="fas fa-plus"></i> Add Custom Task
+                        </button>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeCreateChecklistModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Checklist</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
