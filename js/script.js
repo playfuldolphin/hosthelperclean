@@ -4,6 +4,60 @@ let properties = [];
 let checklists = [];
 let teamMembers = [];
 
+// Platform Fee Configuration
+const FEE_MODELS = {
+    standard: {
+        percentage: 15, // 15% platform fee
+        label: 'Standard',
+        description: 'Standard platform fee for regular bookings'
+    },
+    premium: {
+        percentage: 20, // 20% for priority/rush jobs
+        label: 'Priority',
+        description: 'Priority service with faster response time'
+    },
+    highVolume: {
+        percentage: 10, // 10% for high-volume clients
+        label: 'Volume Discount',
+        description: 'Reduced fee for frequent users'
+    }
+};
+
+// Base Cleaning Prices (what cleaners receive)
+const BASE_PRICES = {
+    standard: {
+        studio: 75,
+        oneBed: 95,
+        twoBed: 120,
+        threeBed: 150,
+        fourBed: 180
+    },
+    deep: {
+        studio: 110,
+        oneBed: 140,
+        twoBed: 180,
+        threeBed: 220,
+        fourBed: 260
+    },
+    quick: {
+        studio: 60,
+        oneBed: 75,
+        twoBed: 95,
+        threeBed: 120,
+        fourBed: 150
+    }
+};
+
+// Add-on Services
+const ADDONS = {
+    laundry: 25,
+    insideOven: 20,
+    insideFridge: 20,
+    windows: 30,
+    garage: 25,
+    supplies: 15
+};
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in
@@ -1201,6 +1255,79 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Pricing Functions
+function calculatePricing(cleaningType, propertySize, addons = [], feeModel = 'standard') {
+    // Get base price
+    let basePrice = BASE_PRICES[cleaningType][propertySize] || 0;
+    
+    // Add addon prices
+    let addonTotal = 0;
+    addons.forEach(addon => {
+        addonTotal += ADDONS[addon] || 0;
+    });
+    
+    // Calculate cleaner payout
+    const cleanerPayout = basePrice + addonTotal;
+    
+    // Calculate platform fee
+    const feePercentage = FEE_MODELS[feeModel].percentage;
+    const platformFee = Math.round(cleanerPayout * (feePercentage / 100) * 100) / 100;
+    
+    // Calculate total host pays
+    const totalPrice = cleanerPayout + platformFee;
+    
+    return {
+        cleanerPayout: cleanerPayout,
+        platformFee: platformFee,
+        totalPrice: totalPrice,
+        feePercentage: feePercentage,
+        breakdown: {
+            baseService: basePrice,
+            addons: addonTotal,
+            addonsList: addons
+        }
+    };
+}
+
+function getPropertySize(bedrooms) {
+    if (bedrooms === 0) return 'studio';
+    if (bedrooms === 1) return 'oneBed';
+    if (bedrooms === 2) return 'twoBed';
+    if (bedrooms === 3) return 'threeBed';
+    return 'fourBed';
+}
+
+function getUserFeeModel(user) {
+    // Determine fee model based on user's booking history
+    if (!user) return 'standard';
+    
+    const bookingCount = checklists.filter(c => 
+        c.userId === user.id && c.status === 'completed'
+    ).length;
+    
+    if (bookingCount >= 20) return 'highVolume';
+    return 'standard';
+}
+
+function showPricingType(type) {
+    // Update active tab
+    document.querySelectorAll('.pricing-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Show/hide content
+    document.querySelectorAll('.pricing-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    if (type === 'cleaning') {
+        document.getElementById('cleaningPricing').classList.add('active');
+    } else {
+        document.getElementById('platformPricing').classList.add('active');
+    }
+}
+
 // Integration Functions
 function loadIntegrations() {
     loadBookingsTimeline();
@@ -1646,14 +1773,19 @@ function loadPropertyCleanings(propertyId) {
     
     cleaningsContainer.innerHTML = propertyCleanings.map(cleaning => {
         const cleaner = cleaners.find(c => c.id === cleaning.cleanerId);
+        const property = properties.find(p => p.id === cleaning.propertyId);
+        const propertySize = getPropertySize(property.bedrooms);
+        const pricing = calculatePricing('standard', propertySize);
+        
         return `
             <div class="cleaning-item">
                 <label>
-                    <input type="checkbox" value="${cleaning.id}" data-amount="75" onchange="updateInvoiceTotal()">
+                    <input type="checkbox" value="${cleaning.id}" data-amount="${pricing.totalPrice}" data-cleaner-amount="${pricing.cleanerPayout}" onchange="updateInvoiceTotal()">
                     <span class="cleaning-info">
                         <strong>${new Date(cleaning.scheduledDate).toLocaleDateString()}</strong>
                         - ${cleaner ? cleaner.name : 'Unassigned'}
-                        - $75.00
+                        - $${pricing.totalPrice.toFixed(2)}
+                        <span class="fee-info">(Cleaner: $${pricing.cleanerPayout}, Fee: $${pricing.platformFee.toFixed(2)})</span>
                     </span>
                 </label>
             </div>
@@ -1783,13 +1915,28 @@ function handleCreateInvoice(event) {
         invoice.recipientType = 'property';
         invoice.recipientId = property.id;
         invoice.recipientName = property.name;
-        invoice.items = selectedCleanings.map(() => ({
-            description: 'Cleaning Service',
-            quantity: 1,
-            rate: 75,
-            amount: 75
-        }));
-        invoice.total = selectedCleanings.length * 75;
+        
+        // Calculate pricing with fee model
+        const propertySize = getPropertySize(property.bedrooms);
+        const pricing = calculatePricing('standard', propertySize, [], getUserFeeModel(currentUser));
+        
+        invoice.items = [
+            {
+                description: `Cleaning Services (${selectedCleanings.length} cleanings)`,
+                quantity: selectedCleanings.length,
+                rate: pricing.cleanerPayout,
+                amount: pricing.cleanerPayout * selectedCleanings.length
+            },
+            {
+                description: `Platform Service Fee (${pricing.feePercentage}%)`,
+                quantity: 1,
+                rate: pricing.platformFee * selectedCleanings.length,
+                amount: pricing.platformFee * selectedCleanings.length
+            }
+        ];
+        invoice.total = pricing.totalPrice * selectedCleanings.length;
+        invoice.cleanerPayout = pricing.cleanerPayout * selectedCleanings.length;
+        invoice.platformFee = pricing.platformFee * selectedCleanings.length;
         
         // Mark cleanings as invoiced
         const checklists = loadFromLocalStorage('checklists') || [];
@@ -2079,8 +2226,11 @@ function displayMarketplaceResults(cleaners) {
                     </div>
                 </div>
                 <div class="cleaner-price">
-                    <span class="price-amount">$${cleaner.hourlyRate}</span>
-                    <span class="price-unit">/hour</span>
+                    <div class="price-display">
+                        <span class="price-amount">$${Math.round(cleaner.hourlyRate * 1.15)}</span>
+                        <span class="price-unit">/hour</span>
+                    </div>
+                    <span class="price-breakdown">Includes 15% platform fee</span>
                 </div>
             </div>
             

@@ -150,55 +150,135 @@
             <div class="container">
                 <h2 class="section-title">Simple, Transparent Pricing</h2>
                 <p class="section-subtitle">Choose the plan that fits your business</p>
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>Starter</h3>
-                        <div class="price">
-                            <span class="currency">$</span>
-                            <span class="amount">19</span>
-                            <span class="period">/month</span>
+                <div class="pricing-tabs">
+                    <button class="pricing-tab active" onclick="showPricingType('cleaning')">Cleaning Service Pricing</button>
+                    <button class="pricing-tab" onclick="showPricingType('platform')">Platform Plans</button>
+                </div>
+
+                <div id="cleaningPricing" class="pricing-content active">
+                    <p class="pricing-intro">Simple, transparent pricing. You pay one price, we handle the rest.</p>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h3>Studio / 1 Bedroom</h3>
+                            <div class="price">
+                                <span class="price-from">from</span>
+                                <span class="currency">$</span>
+                                <span class="amount">95</span>
+                            </div>
+                            <ul class="pricing-breakdown">
+                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $75-95</li>
+                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
+                            </ul>
+                            <div class="service-types">
+                                <p><strong>Quick Clean:</strong> $69</p>
+                                <p><strong>Standard:</strong> $86-109</p>
+                                <p><strong>Deep Clean:</strong> $127-161</p>
+                            </div>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Up to 5 Properties</li>
-                            <li><i class="fas fa-check"></i> Unlimited Checklists</li>
-                            <li><i class="fas fa-check"></i> 3 Team Members</li>
-                            <li><i class="fas fa-check"></i> Basic Analytics</li>
-                            <li><i class="fas fa-check"></i> Email Support</li>
-                        </ul>
-                        <button class="btn btn-outline">Start Free Trial</button>
+                        <div class="pricing-card featured">
+                            <div class="popular-badge">Most Common</div>
+                            <h3>2-3 Bedrooms</h3>
+                            <div class="price">
+                                <span class="price-from">from</span>
+                                <span class="currency">$</span>
+                                <span class="amount">138</span>
+                            </div>
+                            <ul class="pricing-breakdown">
+                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $120-150</li>
+                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
+                            </ul>
+                            <div class="service-types">
+                                <p><strong>Quick Clean:</strong> $109-138</p>
+                                <p><strong>Standard:</strong> $138-173</p>
+                                <p><strong>Deep Clean:</strong> $207-253</p>
+                            </div>
+                        </div>
+                        <div class="pricing-card">
+                            <h3>4+ Bedrooms</h3>
+                            <div class="price">
+                                <span class="price-from">from</span>
+                                <span class="currency">$</span>
+                                <span class="amount">207</span>
+                            </div>
+                            <ul class="pricing-breakdown">
+                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $180+</li>
+                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
+                            </ul>
+                            <div class="service-types">
+                                <p><strong>Quick Clean:</strong> $173+</p>
+                                <p><strong>Standard:</strong> $207+</p>
+                                <p><strong>Deep Clean:</strong> $299+</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="pricing-card featured">
-                        <div class="popular-badge">Most Popular</div>
-                        <h3>Professional</h3>
-                        <div class="price">
-                            <span class="currency">$</span>
-                            <span class="amount">49</span>
-                            <span class="period">/month</span>
+                    <div class="pricing-addons">
+                        <h4>Add-on Services</h4>
+                        <div class="addon-list">
+                            <span class="addon-item"><i class="fas fa-plus"></i> Laundry Service: +$29</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Oven: +$23</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Fridge: +$23</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Window Cleaning: +$35</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Garage: +$29</span>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Up to 20 Properties</li>
-                            <li><i class="fas fa-check"></i> Unlimited Checklists</li>
-                            <li><i class="fas fa-check"></i> Unlimited Team Members</li>
-                            <li><i class="fas fa-check"></i> Advanced Analytics</li>
-                            <li><i class="fas fa-check"></i> Priority Support</li>
-                            <li><i class="fas fa-check"></i> Custom Branding</li>
-                        </ul>
-                        <button class="btn btn-primary">Start Free Trial</button>
                     </div>
-                    <div class="pricing-card">
-                        <h3>Enterprise</h3>
-                        <div class="price">
-                            <span class="amount">Custom</span>
+                    <div class="fee-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>High-volume discount:</strong> Book 20+ cleanings per month and get 10% platform fee (save 33%!)</p>
+                    </div>
+                </div>
+
+                <div id="platformPricing" class="pricing-content">
+                    <p class="pricing-intro">Choose how you want to use our platform</p>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h3>Pay As You Go</h3>
+                            <div class="price">
+                                <span class="amount">15%</span>
+                                <span class="period">per booking</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> No monthly fees</li>
+                                <li><i class="fas fa-check"></i> Vetted cleaners</li>
+                                <li><i class="fas fa-check"></i> 24/7 support</li>
+                                <li><i class="fas fa-check"></i> Instant booking</li>
+                                <li><i class="fas fa-check"></i> Quality guarantee</li>
+                            </ul>
+                            <button class="btn btn-outline" onclick="showSignup()">Get Started</button>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> Unlimited Properties</li>
-                            <li><i class="fas fa-check"></i> Unlimited Everything</li>
-                            <li><i class="fas fa-check"></i> API Access</li>
-                            <li><i class="fas fa-check"></i> Dedicated Support</li>
-                            <li><i class="fas fa-check"></i> Custom Integrations</li>
-                            <li><i class="fas fa-check"></i> SLA Guarantee</li>
-                        </ul>
-                        <button class="btn btn-outline">Contact Sales</button>
+                        <div class="pricing-card featured">
+                            <div class="popular-badge">Best Value</div>
+                            <h3>Pro Host</h3>
+                            <div class="price">
+                                <span class="currency">$</span>
+                                <span class="amount">99</span>
+                                <span class="period">/month</span>
+                            </div>
+                            <p class="price-subtitle">+ 10% per booking</p>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Reduced platform fee</li>
+                                <li><i class="fas fa-check"></i> Priority scheduling</li>
+                                <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                                <li><i class="fas fa-check"></i> Advanced analytics</li>
+                                <li><i class="fas fa-check"></i> Custom integrations</li>
+                                <li><i class="fas fa-check"></i> Bulk scheduling tools</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="showSignup()">Start Free Trial</button>
+                        </div>
+                        <div class="pricing-card">
+                            <h3>Enterprise</h3>
+                            <div class="price">
+                                <span class="amount">Custom</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Volume pricing</li>
+                                <li><i class="fas fa-check"></i> Dedicated team</li>
+                                <li><i class="fas fa-check"></i> API access</li>
+                                <li><i class="fas fa-check"></i> Custom contracts</li>
+                                <li><i class="fas fa-check"></i> SLA guarantees</li>
+                                <li><i class="fas fa-check"></i> White-label options</li>
+                            </ul>
+                            <button class="btn btn-outline">Contact Sales</button>
+                        </div>
                     </div>
                 </div>
             </div>

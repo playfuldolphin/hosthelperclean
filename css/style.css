@@ -296,6 +296,49 @@ body {
     padding: 5rem 0;
 }
 
+.pricing-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.pricing-tab {
+    padding: 0.75rem 2rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.pricing-tab:hover {
+    background: #f7fafc;
+}
+
+.pricing-tab.active {
+    background: #3182ce;
+    color: white;
+    border-color: #3182ce;
+}
+
+.pricing-content {
+    display: none;
+}
+
+.pricing-content.active {
+    display: block;
+}
+
+.pricing-intro {
+    text-align: center;
+    font-size: 1.125rem;
+    color: #718096;
+    margin-bottom: 2rem;
+}
+
 .pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -364,6 +407,104 @@ body {
     color: #718096;
 }
 
+.price-from {
+    display: block;
+    font-size: 0.875rem;
+    color: #718096;
+    margin-bottom: 0.25rem;
+}
+
+.price-subtitle {
+    font-size: 0.875rem;
+    color: #718096;
+    margin-top: -0.5rem;
+}
+
+.pricing-breakdown {
+    list-style: none;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+.pricing-breakdown li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.cleaner-pay {
+    color: #065f46;
+}
+
+.platform-fee {
+    color: #1e40af;
+}
+
+.service-types {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.service-types p {
+    margin: 0.5rem 0;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+.pricing-addons {
+    text-align: center;
+    margin: 3rem 0;
+    padding: 2rem;
+    background: #f7fafc;
+    border-radius: 12px;
+}
+
+.pricing-addons h4 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+}
+
+.addon-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.addon-item {
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    border: 1px solid #e2e8f0;
+}
+
+.fee-notice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #e6f2ff;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.fee-notice i {
+    color: #3182ce;
+    font-size: 1.25rem;
+}
+
+.fee-notice p {
+    margin: 0;
+    color: #2c5282;
+}
+
 .pricing-features {
     list-style: none;
     margin: 2rem 0;
@@ -379,6 +520,16 @@ body {
 
 .pricing-features i {
     color: #48bb78;
+}
+
+/* Marketplace price display update */
+.price-display {
+    margin-bottom: 0.25rem;
+}
+
+.price-breakdown {
+    font-size: 0.75rem;
+    color: #718096;
 }
 
 /* Landing Footer */
