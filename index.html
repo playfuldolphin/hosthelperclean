@@ -861,17 +861,133 @@
                         </div>
                     </div>
 
-                    <div class="invoices-section">
-                        <div class="section-header">
-                            <h2>Recent Invoices</h2>
-                            <div class="filter-buttons">
-                                <button class="filter-btn active" onclick="filterInvoices('all')">All</button>
-                                <button class="filter-btn" onclick="filterInvoices('pending')">Pending</button>
-                                <button class="filter-btn" onclick="filterInvoices('paid')">Paid</button>
+                    <div class="billing-tabs">
+                        <button class="billing-tab active" onclick="showBillingSection('invoices')">Invoices</button>
+                        <button class="billing-tab" onclick="showBillingSection('payouts')">Cleaner Payouts</button>
+                        <button class="billing-tab" onclick="showBillingSection('payment-methods')">Payment Methods</button>
+                    </div>
+
+                    <div id="invoicesSection" class="billing-section active">
+                        <div class="invoices-section">
+                            <div class="section-header">
+                                <h2>Recent Invoices</h2>
+                                <div class="filter-buttons">
+                                    <button class="filter-btn active" onclick="filterInvoices('all')">All</button>
+                                    <button class="filter-btn" onclick="filterInvoices('pending')">Pending</button>
+                                    <button class="filter-btn" onclick="filterInvoices('paid')">Paid</button>
+                                </div>
+                            </div>
+                            <div class="invoices-list" id="invoicesList">
+                                <!-- Invoices will be loaded here -->
                             </div>
                         </div>
-                        <div class="invoices-list" id="invoicesList">
-                            <!-- Invoices will be loaded here -->
+                    </div>
+
+                    <div id="payoutsSection" class="billing-section">
+                        <div class="payouts-section">
+                            <div class="section-header">
+                                <h2>Automated Cleaner Payouts</h2>
+                                <button class="btn btn-primary" onclick="processPayouts()">
+                                    <i class="fas fa-paper-plane"></i> Process Pending Payouts
+                                </button>
+                            </div>
+                            
+                            <div class="payout-settings">
+                                <h3>Payout Schedule</h3>
+                                <div class="settings-grid">
+                                    <div class="setting-item">
+                                        <label>Automatic Payouts</label>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="autoPayouts" checked onchange="updatePayoutSettings()">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Payout Frequency</label>
+                                        <select id="payoutFrequency" onchange="updatePayoutSettings()">
+                                            <option value="instant">Instant (after each cleaning)</option>
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly" selected>Weekly</option>
+                                            <option value="biweekly">Bi-weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Processing Day</label>
+                                        <select id="payoutDay" onchange="updatePayoutSettings()">
+                                            <option value="monday">Monday</option>
+                                            <option value="friday" selected>Friday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pending-payouts">
+                                <h3>Pending Payouts</h3>
+                                <div id="pendingPayoutsList">
+                                    <!-- Pending payouts will be shown here -->
+                                </div>
+                            </div>
+
+                            <div class="payout-history">
+                                <h3>Payout History</h3>
+                                <div id="payoutHistoryList">
+                                    <!-- Payout history will be shown here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="paymentMethodsSection" class="billing-section">
+                        <div class="payment-methods-section">
+                            <div class="section-header">
+                                <h2>Payment Processing</h2>
+                                <button class="btn btn-primary" onclick="addPaymentMethod()">
+                                    <i class="fas fa-plus"></i> Add Payment Method
+                                </button>
+                            </div>
+                            
+                            <div class="payment-setup">
+                                <div class="stripe-setup">
+                                    <div class="setup-card">
+                                        <img src="images/stripe-logo.png" alt="Stripe" class="payment-logo">
+                                        <h3>Stripe Connect</h3>
+                                        <p>Accept payments and automate payouts with Stripe</p>
+                                        <div id="stripeStatus" class="setup-status">
+                                            <span class="status-indicator pending">Not Connected</span>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="connectStripe()">
+                                            <i class="fas fa-link"></i> Connect Stripe Account
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="payment-methods-grid">
+                                    <h3>Accepted Payment Methods</h3>
+                                    <div class="payment-method-list">
+                                        <div class="payment-method">
+                                            <i class="fas fa-credit-card"></i>
+                                            <span>Credit/Debit Cards</span>
+                                            <span class="method-status active">Active</span>
+                                        </div>
+                                        <div class="payment-method">
+                                            <i class="fab fa-apple-pay"></i>
+                                            <span>Apple Pay</span>
+                                            <span class="method-status active">Active</span>
+                                        </div>
+                                        <div class="payment-method">
+                                            <i class="fab fa-google-pay"></i>
+                                            <span>Google Pay</span>
+                                            <span class="method-status active">Active</span>
+                                        </div>
+                                        <div class="payment-method">
+                                            <i class="fas fa-university"></i>
+                                            <span>ACH Bank Transfer</span>
+                                            <span class="method-status">Setup Required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -879,16 +995,170 @@
                 <!-- Reports Page -->
                 <div id="reportsPage" class="dashboard-page">
                     <div class="page-header">
-                        <h1>Reports & Analytics</h1>
+                        <h1>Analytics & Revenue</h1>
                         <div class="date-range-selector">
-                            <button class="btn btn-outline">
-                                <i class="fas fa-calendar"></i> Last 30 Days
+                            <select id="analyticsRange" onchange="updateAnalytics(this.value)">
+                                <option value="week">Last 7 Days</option>
+                                <option value="month" selected>Last 30 Days</option>
+                                <option value="quarter">Last 90 Days</option>
+                                <option value="year">Last Year</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="exportAnalytics()">
+                                <i class="fas fa-download"></i> Export Report
                             </button>
                         </div>
                     </div>
                     
-                    <div class="reports-content">
-                        <p>Reports coming soon...</p>
+                    <div class="analytics-content">
+                        <!-- Revenue Overview -->
+                        <div class="analytics-section">
+                            <h2>Revenue Overview</h2>
+                            <div class="revenue-cards">
+                                <div class="revenue-card">
+                                    <div class="revenue-icon">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </div>
+                                    <div class="revenue-content">
+                                        <p class="revenue-label">Total Revenue</p>
+                                        <h3 class="revenue-amount" id="totalRevenue">$0</h3>
+                                        <span class="revenue-change positive">+0%</span>
+                                    </div>
+                                </div>
+                                <div class="revenue-card">
+                                    <div class="revenue-icon">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <div class="revenue-content">
+                                        <p class="revenue-label">Platform Fees</p>
+                                        <h3 class="revenue-amount" id="platformFees">$0</h3>
+                                        <span class="revenue-change">15% avg</span>
+                                    </div>
+                                </div>
+                                <div class="revenue-card">
+                                    <div class="revenue-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="revenue-content">
+                                        <p class="revenue-label">Cleaner Payouts</p>
+                                        <h3 class="revenue-amount" id="cleanerPayouts">$0</h3>
+                                        <span class="revenue-change">85% of revenue</span>
+                                    </div>
+                                </div>
+                                <div class="revenue-card">
+                                    <div class="revenue-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="revenue-content">
+                                        <p class="revenue-label">Net Profit</p>
+                                        <h3 class="revenue-amount" id="netProfit">$0</h3>
+                                        <span class="revenue-change positive">+0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h3>Booking Trends</h3>
+                                <div class="chart-container">
+                                    <canvas id="bookingChart"></canvas>
+                                </div>
+                                <div class="metric-list">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Total Bookings</span>
+                                        <span class="metric-value" id="totalBookings">0</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Completion Rate</span>
+                                        <span class="metric-value" id="completionRate">0%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Avg per Booking</span>
+                                        <span class="metric-value" id="avgBookingValue">$0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>Top Properties</h3>
+                                <div id="topProperties" class="property-performance">
+                                    <!-- Dynamic property list -->
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>Cleaner Performance</h3>
+                                <div id="cleanerPerformance" class="cleaner-metrics">
+                                    <!-- Dynamic cleaner metrics -->
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h3>Revenue Breakdown</h3>
+                                <div class="revenue-breakdown">
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Standard Cleanings</span>
+                                        <div class="breakdown-bar">
+                                            <div class="bar-fill" id="standardBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="standardRevenue">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Deep Cleanings</span>
+                                        <div class="breakdown-bar">
+                                            <div class="bar-fill deep" id="deepBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="deepRevenue">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Priority/Rush</span>
+                                        <div class="breakdown-bar">
+                                            <div class="bar-fill priority" id="priorityBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="priorityRevenue">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Add-ons</span>
+                                        <div class="breakdown-bar">
+                                            <div class="bar-fill addon" id="addonBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="addonRevenue">$0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Insights -->
+                        <div class="analytics-section">
+                            <h2>Customer Insights</h2>
+                            <div class="insights-grid">
+                                <div class="insight-card">
+                                    <i class="fas fa-star"></i>
+                                    <h4>Average Rating</h4>
+                                    <p class="insight-value" id="avgRating">0.0</p>
+                                    <span class="insight-detail">from 0 reviews</span>
+                                </div>
+                                <div class="insight-card">
+                                    <i class="fas fa-redo"></i>
+                                    <h4>Repeat Rate</h4>
+                                    <p class="insight-value" id="repeatRate">0%</p>
+                                    <span class="insight-detail">customers book again</span>
+                                </div>
+                                <div class="insight-card">
+                                    <i class="fas fa-clock"></i>
+                                    <h4>Avg Response Time</h4>
+                                    <p class="insight-value" id="responseTime">0h</p>
+                                    <span class="insight-detail">to confirm bookings</span>
+                                </div>
+                                <div class="insight-card">
+                                    <i class="fas fa-trophy"></i>
+                                    <h4>Top Fee Tier</h4>
+                                    <p class="insight-value" id="topTier">Standard</p>
+                                    <span class="insight-detail">most used pricing</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

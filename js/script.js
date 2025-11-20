@@ -271,6 +271,9 @@ function showDashboardPage(page) {
             case 'billing':
                 loadBilling();
                 break;
+            case 'reports':
+                loadAnalytics();
+                break;
         }
     }
 }
@@ -866,17 +869,13 @@ function completeWithPhotos(token) {
     
     showNotification('Cleaning completed with photo verification!');
     
-    // Close modal and show completion message
+    // Close modal and show rating request
     document.querySelector('.modal').remove();
     
-    document.getElementById('cleanerChecklistView').innerHTML = `
-        <div class="completion-message">
-            <i class="fas fa-check-circle"></i>
-            <h2>Checklist Completed!</h2>
-            <p>Thank you for completing the cleaning. ${photoCount} verification photos have been uploaded.</p>
-            <p>The property owner has been notified.</p>
-        </div>
-    `;
+    // Show rating modal for property owner
+    setTimeout(() => {
+        showPropertyOwnerRating(checklist);
+    }, 1000);
 }
 
 // Utility Functions
@@ -1141,7 +1140,8 @@ function loadTeamMembers() {
                 <p>${member.phone}</p>
                 <div class="member-stats">
                     <span class="stat">
-                        <i class="fas fa-star"></i> ${member.rating}
+                        <i class="fas fa-star"></i> ${member.rating || 'New'}
+                        ${member.totalRatings ? ` (${member.totalRatings})` : ''}
                     </span>
                     <span class="stat">
                         <i class="fas fa-check-circle"></i> ${member.completedCleanings} cleanings
@@ -1326,6 +1326,747 @@ function showPricingType(type) {
     } else {
         document.getElementById('platformPricing').classList.add('active');
     }
+}
+
+// Rating System Functions
+function showPropertyOwnerRating(checklist) {
+    const property = properties.find(p => p.id === checklist.propertyId);
+    const cleaner = teamMembers.find(m => m.id === checklist.cleanerId);
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Rate Your Cleaning Service</h2>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rating-container">
+                    <p>How was your cleaning service at <strong>${property?.name || 'your property'}</strong>?</p>
+                    ${cleaner ? `<p>Cleaned by: <strong>${cleaner.name}</strong></p>` : ''}
+                    
+                    <div class="rating-section">
+                        <h3>Overall Rating</h3>
+                        <div class="star-rating" id="overallRating">
+                            ${[1,2,3,4,5].map(i => `
+                                <i class="far fa-star" data-rating="${i}" onclick="setRating('overall', ${i})"></i>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="rating-categories">
+                        <div class="rating-category">
+                            <label>Thoroughness</label>
+                            <div class="star-rating" id="thoroughnessRating">
+                                ${[1,2,3,4,5].map(i => `
+                                    <i class="far fa-star" data-rating="${i}" onclick="setRating('thoroughness', ${i})"></i>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="rating-category">
+                            <label>Attention to Detail</label>
+                            <div class="star-rating" id="detailRating">
+                                ${[1,2,3,4,5].map(i => `
+                                    <i class="far fa-star" data-rating="${i}" onclick="setRating('detail', ${i})"></i>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="rating-category">
+                            <label>Communication</label>
+                            <div class="star-rating" id="communicationRating">
+                                ${[1,2,3,4,5].map(i => `
+                                    <i class="far fa-star" data-rating="${i}" onclick="setRating('communication', ${i})"></i>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quality-checklist">
+                        <h3>Quality Inspection</h3>
+                        <label class="inspection-item">
+                            <input type="checkbox" id="bedsCheck">
+                            <span>Beds made properly</span>
+                        </label>
+                        <label class="inspection-item">
+                            <input type="checkbox" id="bathroomsCheck">
+                            <span>Bathrooms spotless</span>
+                        </label>
+                        <label class="inspection-item">
+                            <input type="checkbox" id="kitchenCheck">
+                            <span>Kitchen thoroughly cleaned</span>
+                        </label>
+                        <label class="inspection-item">
+                            <input type="checkbox" id="floorsCheck">
+                            <span>Floors cleaned properly</span>
+                        </label>
+                        <label class="inspection-item">
+                            <input type="checkbox" id="suppliesCheck">
+                            <span>Supplies restocked</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Additional Feedback (Optional)</label>
+                        <textarea id="ratingFeedback" rows="3" placeholder="Any specific feedback about the cleaning..."></textarea>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Skip</button>
+                        <button class="btn btn-primary" onclick="submitRating('${checklist.id}')">
+                            Submit Rating
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function setRating(category, rating) {
+    const container = document.getElementById(category + 'Rating');
+    container.querySelectorAll('i').forEach((star, index) => {
+        if (index < rating) {
+            star.className = 'fas fa-star';
+            star.style.color = '#f6ad55';
+        } else {
+            star.className = 'far fa-star';
+            star.style.color = '';
+        }
+    });
+    container.dataset.rating = rating;
+}
+
+function submitRating(checklistId) {
+    const ratings = {
+        overall: parseInt(document.getElementById('overallRating').dataset.rating || 0),
+        thoroughness: parseInt(document.getElementById('thoroughnessRating').dataset.rating || 0),
+        detail: parseInt(document.getElementById('detailRating').dataset.rating || 0),
+        communication: parseInt(document.getElementById('communicationRating').dataset.rating || 0)
+    };
+    
+    const inspection = {
+        beds: document.getElementById('bedsCheck').checked,
+        bathrooms: document.getElementById('bathroomsCheck').checked,
+        kitchen: document.getElementById('kitchenCheck').checked,
+        floors: document.getElementById('floorsCheck').checked,
+        supplies: document.getElementById('suppliesCheck').checked
+    };
+    
+    const feedback = document.getElementById('ratingFeedback').value;
+    
+    if (ratings.overall === 0) {
+        showNotification('Please provide an overall rating', 'error');
+        return;
+    }
+    
+    // Save rating
+    const checklist = checklists.find(c => c.id === checklistId);
+    if (checklist) {
+        checklist.rating = {
+            ratings: ratings,
+            inspection: inspection,
+            feedback: feedback,
+            ratedAt: new Date().toISOString()
+        };
+        
+        // Update cleaner's average rating
+        if (checklist.cleanerId) {
+            updateCleanerRating(checklist.cleanerId, ratings.overall);
+        }
+        
+        saveToLocalStorage('checklists', checklists);
+    }
+    
+    document.querySelector('.modal').remove();
+    showNotification('Thank you for your feedback!');
+    
+    // Show completion message
+    document.getElementById('cleanerChecklistView').innerHTML = `
+        <div class="completion-message">
+            <i class="fas fa-check-circle"></i>
+            <h2>Cleaning Rated!</h2>
+            <p>Your feedback helps us maintain quality standards.</p>
+            <div class="rating-summary">
+                <p>Overall Rating: ${generateStars(ratings.overall)}</p>
+                ${ratings.overall < 4 ? '<p>We\'ll follow up on your feedback to improve our service.</p>' : '<p>We\'re glad you had a great experience!</p>'}
+            </div>
+        </div>
+    `;
+}
+
+function updateCleanerRating(cleanerId, newRating) {
+    const cleaner = teamMembers.find(m => m.id === cleanerId);
+    if (!cleaner) return;
+    
+    // Calculate new average rating
+    const completedCleanings = checklists.filter(c => 
+        c.cleanerId === cleanerId && 
+        c.status === 'completed' && 
+        c.rating
+    );
+    
+    const totalRatings = completedCleanings.reduce((sum, c) => 
+        sum + (c.rating.ratings.overall || 0), 0
+    ) + newRating;
+    
+    const averageRating = totalRatings / (completedCleanings.length + 1);
+    
+    cleaner.rating = Math.round(averageRating * 10) / 10;
+    cleaner.totalRatings = completedCleanings.length + 1;
+    
+    saveToLocalStorage('teamMembers', teamMembers);
+}
+
+// Analytics Functions
+function loadAnalytics(period = 'month') {
+    const days = {
+        'week': 7,
+        'month': 30,
+        'quarter': 90,
+        'year': 365
+    }[period] || 30;
+    
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    // Get completed checklists in date range
+    const analyticsData = checklists.filter(c => {
+        const completedDate = new Date(c.completedAt || c.scheduledDate);
+        return c.status === 'completed' && completedDate >= startDate;
+    });
+    
+    // Calculate revenue metrics
+    let totalRevenue = 0;
+    let platformFees = 0;
+    let cleanerPayouts = 0;
+    let bookingsByType = {
+        standard: 0,
+        deep: 0,
+        quick: 0,
+        priority: 0
+    };
+    let addonRevenue = 0;
+    
+    analyticsData.forEach(checklist => {
+        const property = properties.find(p => p.id === checklist.propertyId);
+        if (!property) return;
+        
+        const propertySize = getPropertySize(property.bedrooms);
+        const cleaningType = checklist.template || 'standard';
+        const feeModel = checklist.priority === 'high' ? 'premium' : getUserFeeModel(currentUser);
+        
+        // Calculate pricing
+        const pricing = calculatePricing(cleaningType, propertySize, [], feeModel);
+        
+        totalRevenue += pricing.totalPrice;
+        platformFees += pricing.platformFee;
+        cleanerPayouts += pricing.cleanerPayout;
+        
+        // Track by type
+        if (checklist.priority === 'high') {
+            bookingsByType.priority += pricing.platformFee;
+        } else {
+            bookingsByType[cleaningType] = (bookingsByType[cleaningType] || 0) + pricing.platformFee;
+        }
+    });
+    
+    // Update revenue cards
+    document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+    document.getElementById('platformFees').textContent = `$${platformFees.toFixed(2)}`;
+    document.getElementById('cleanerPayouts').textContent = `$${cleanerPayouts.toFixed(2)}`;
+    document.getElementById('netProfit').textContent = `$${platformFees.toFixed(2)}`;
+    
+    // Update booking metrics
+    const totalBookings = analyticsData.length;
+    const completionRate = totalBookings > 0 ? 
+        (analyticsData.filter(c => c.status === 'completed').length / totalBookings * 100) : 0;
+    const avgBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0;
+    
+    document.getElementById('totalBookings').textContent = totalBookings;
+    document.getElementById('completionRate').textContent = `${completionRate.toFixed(1)}%`;
+    document.getElementById('avgBookingValue').textContent = `$${avgBookingValue.toFixed(2)}`;
+    
+    // Update revenue breakdown
+    updateRevenueBreakdown(bookingsByType, addonRevenue, platformFees);
+    
+    // Load top properties
+    loadTopProperties(analyticsData);
+    
+    // Load cleaner performance
+    loadCleanerPerformance(analyticsData);
+    
+    // Update customer insights
+    updateCustomerInsights(analyticsData);
+    
+    // Draw booking chart
+    drawBookingChart(analyticsData, days);
+}
+
+function updateRevenueBreakdown(bookingsByType, addonRevenue, totalFees) {
+    const setBar = (id, value, total) => {
+        const percentage = total > 0 ? (value / total * 100) : 0;
+        document.getElementById(id).style.width = `${percentage}%`;
+        document.getElementById(id.replace('Bar', 'Revenue')).textContent = `$${value.toFixed(2)}`;
+    };
+    
+    setBar('standardBar', bookingsByType.standard || 0, totalFees);
+    setBar('deepBar', bookingsByType.deep || 0, totalFees);
+    setBar('priorityBar', bookingsByType.priority || 0, totalFees);
+    setBar('addonBar', addonRevenue, totalFees);
+}
+
+function loadTopProperties(analyticsData) {
+    const propertyStats = {};
+    
+    analyticsData.forEach(checklist => {
+        const property = properties.find(p => p.id === checklist.propertyId);
+        if (!property) return;
+        
+        if (!propertyStats[property.id]) {
+            propertyStats[property.id] = {
+                name: property.name,
+                bookings: 0,
+                revenue: 0,
+                rating: 0,
+                ratingCount: 0
+            };
+        }
+        
+        propertyStats[property.id].bookings++;
+        
+        const propertySize = getPropertySize(property.bedrooms);
+        const pricing = calculatePricing(checklist.template || 'standard', propertySize);
+        propertyStats[property.id].revenue += pricing.platformFee;
+        
+        if (checklist.rating && checklist.rating.ratings.overall) {
+            propertyStats[property.id].rating += checklist.rating.ratings.overall;
+            propertyStats[property.id].ratingCount++;
+        }
+    });
+    
+    // Sort by revenue and take top 5
+    const topProperties = Object.values(propertyStats)
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 5);
+    
+    const container = document.getElementById('topProperties');
+    container.innerHTML = topProperties.map((prop, index) => `
+        <div class="performance-item">
+            <span class="rank">${index + 1}</span>
+            <div class="property-info">
+                <h4>${prop.name}</h4>
+                <p>${prop.bookings} bookings • $${prop.revenue.toFixed(2)} fees</p>
+            </div>
+            ${prop.ratingCount > 0 ? `
+                <div class="property-rating">
+                    ${generateStars(prop.rating / prop.ratingCount)}
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+function loadCleanerPerformance(analyticsData) {
+    const cleanerStats = {};
+    
+    analyticsData.forEach(checklist => {
+        if (!checklist.cleanerId) return;
+        
+        const cleaner = teamMembers.find(m => m.id === checklist.cleanerId);
+        if (!cleaner) return;
+        
+        if (!cleanerStats[cleaner.id]) {
+            cleanerStats[cleaner.id] = {
+                name: cleaner.name,
+                completions: 0,
+                earnings: 0,
+                rating: cleaner.rating || 0,
+                onTime: 0
+            };
+        }
+        
+        cleanerStats[cleaner.id].completions++;
+        
+        const property = properties.find(p => p.id === checklist.propertyId);
+        const propertySize = getPropertySize(property?.bedrooms || 1);
+        const pricing = calculatePricing(checklist.template || 'standard', propertySize);
+        cleanerStats[cleaner.id].earnings += pricing.cleanerPayout;
+    });
+    
+    const container = document.getElementById('cleanerPerformance');
+    const topCleaners = Object.values(cleanerStats).sort((a, b) => b.completions - a.completions);
+    
+    container.innerHTML = topCleaners.map(cleaner => `
+        <div class="cleaner-metric-item">
+            <div class="cleaner-info">
+                <h4>${cleaner.name}</h4>
+                <p>${cleaner.completions} cleanings • $${cleaner.earnings.toFixed(2)} earned</p>
+            </div>
+            <div class="cleaner-rating">
+                ${cleaner.rating > 0 ? generateStars(cleaner.rating) : 'New'}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateCustomerInsights(analyticsData) {
+    // Average rating
+    const ratings = analyticsData
+        .filter(c => c.rating && c.rating.ratings.overall)
+        .map(c => c.rating.ratings.overall);
+    
+    const avgRating = ratings.length > 0 ? 
+        (ratings.reduce((a, b) => a + b, 0) / ratings.length) : 0;
+    
+    document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+    document.querySelector('#avgRating + .insight-detail').textContent = `from ${ratings.length} reviews`;
+    
+    // Repeat rate
+    const customerBookings = {};
+    analyticsData.forEach(c => {
+        const key = c.userId || c.propertyId;
+        customerBookings[key] = (customerBookings[key] || 0) + 1;
+    });
+    
+    const repeatCustomers = Object.values(customerBookings).filter(count => count > 1).length;
+    const totalCustomers = Object.keys(customerBookings).length;
+    const repeatRate = totalCustomers > 0 ? (repeatCustomers / totalCustomers * 100) : 0;
+    
+    document.getElementById('repeatRate').textContent = `${repeatRate.toFixed(0)}%`;
+}
+
+function drawBookingChart(data, days) {
+    // Simple text-based chart for now
+    const canvas = document.getElementById('bookingChart');
+    if (!canvas) return;
+    
+    // In production, use Chart.js or similar
+    canvas.style.height = '200px';
+    canvas.style.display = 'flex';
+    canvas.style.alignItems = 'center';
+    canvas.style.justifyContent = 'center';
+    canvas.innerHTML = `<p style="color: #718096;">Chart visualization would display ${data.length} bookings over ${days} days</p>`;
+}
+
+function updateAnalytics(period) {
+    loadAnalytics(period);
+}
+
+function exportAnalytics() {
+    showNotification('Generating analytics report...');
+    
+    // In production, generate CSV or PDF
+    setTimeout(() => {
+        showNotification('Analytics report downloaded!', 'success');
+    }, 1500);
+}
+
+// Payout System Functions
+function showBillingSection(section) {
+    // Update active tab
+    document.querySelectorAll('.billing-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Show/hide sections
+    document.querySelectorAll('.billing-section').forEach(sec => {
+        sec.classList.remove('active');
+    });
+    
+    document.getElementById(section + 'Section').classList.add('active');
+    
+    if (section === 'payouts') {
+        loadPendingPayouts();
+        loadPayoutHistory();
+    }
+}
+
+function loadPendingPayouts() {
+    const pendingPayouts = calculatePendingPayouts();
+    const container = document.getElementById('pendingPayoutsList');
+    
+    if (pendingPayouts.length === 0) {
+        container.innerHTML = '<p class="empty-state">No pending payouts</p>';
+        return;
+    }
+    
+    const totalPending = pendingPayouts.reduce((sum, p) => sum + p.amount, 0);
+    
+    container.innerHTML = `
+        <div class="payout-summary">
+            <div class="summary-stat">
+                <span class="stat-label">Total Pending</span>
+                <span class="stat-value">$${totalPending.toFixed(2)}</span>
+            </div>
+            <div class="summary-stat">
+                <span class="stat-label">Cleaners</span>
+                <span class="stat-value">${pendingPayouts.length}</span>
+            </div>
+            <div class="summary-stat">
+                <span class="stat-label">Next Payout</span>
+                <span class="stat-value">${getNextPayoutDate()}</span>
+            </div>
+        </div>
+        <div class="payout-items">
+            ${pendingPayouts.map(payout => `
+                <div class="payout-item">
+                    <div class="payout-cleaner">
+                        <i class="fas fa-user-circle"></i>
+                        <div>
+                            <h4>${payout.cleanerName}</h4>
+                            <p>${payout.cleaningCount} cleanings • ${payout.periodLabel}</p>
+                        </div>
+                    </div>
+                    <div class="payout-amount">
+                        <span class="amount">$${payout.amount.toFixed(2)}</span>
+                        <button class="btn btn-sm btn-outline" onclick="viewPayoutDetails('${payout.cleanerId}')">
+                            <i class="fas fa-list"></i> Details
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function calculatePendingPayouts() {
+    const payouts = [];
+    const frequency = document.getElementById('payoutFrequency')?.value || 'weekly';
+    
+    // Get unpaid completed cleanings grouped by cleaner
+    const unpaidByCleanercleanings = {};
+    
+    checklists.filter(c => 
+        c.status === 'completed' && 
+        !c.paidToCleaner &&
+        c.cleanerId
+    ).forEach(checklist => {
+        if (!unpaidByCleanercleanings[checklist.cleanerId]) {
+            unpaidByCleanercleanings[checklist.cleanerId] = [];
+        }
+        unpaidByCleanercleanings[checklist.cleanerId].push(checklist);
+    });
+    
+    // Calculate payouts for each cleaner
+    Object.keys(unpaidByCleanercleanings).forEach(cleanerId => {
+        const cleaner = teamMembers.find(m => m.id === cleanerId);
+        if (!cleaner) return;
+        
+        const cleanings = unpaidByCleanercleanings[cleanerId];
+        let totalAmount = 0;
+        
+        cleanings.forEach(checklist => {
+            const property = properties.find(p => p.id === checklist.propertyId);
+            if (property) {
+                const propertySize = getPropertySize(property.bedrooms);
+                const pricing = calculatePricing(checklist.template || 'standard', propertySize);
+                totalAmount += pricing.cleanerPayout;
+            }
+        });
+        
+        if (totalAmount > 0) {
+            payouts.push({
+                cleanerId: cleanerId,
+                cleanerName: cleaner.name,
+                cleaningCount: cleanings.length,
+                amount: totalAmount,
+                periodLabel: getPeriodLabel(cleanings),
+                cleanings: cleanings
+            });
+        }
+    });
+    
+    return payouts;
+}
+
+function getPeriodLabel(cleanings) {
+    const dates = cleanings.map(c => new Date(c.completedAt || c.scheduledDate));
+    const earliest = new Date(Math.min(...dates));
+    const latest = new Date(Math.max(...dates));
+    
+    if (earliest.toDateString() === latest.toDateString()) {
+        return earliest.toLocaleDateString();
+    }
+    
+    return `${earliest.toLocaleDateString()} - ${latest.toLocaleDateString()}`;
+}
+
+function getNextPayoutDate() {
+    const frequency = document.getElementById('payoutFrequency')?.value || 'weekly';
+    const today = new Date();
+    
+    switch(frequency) {
+        case 'instant':
+            return 'Immediate';
+        case 'daily':
+            return 'Tonight';
+        case 'weekly':
+            const friday = new Date();
+            friday.setDate(today.getDate() + (5 - today.getDay() + 7) % 7);
+            return friday.toLocaleDateString();
+        case 'biweekly':
+            return 'In ' + (14 - today.getDate() % 14) + ' days';
+        case 'monthly':
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+            return nextMonth.toLocaleDateString();
+        default:
+            return 'Friday';
+    }
+}
+
+function processPayouts() {
+    const pendingPayouts = calculatePendingPayouts();
+    
+    if (pendingPayouts.length === 0) {
+        showNotification('No pending payouts to process', 'error');
+        return;
+    }
+    
+    const totalAmount = pendingPayouts.reduce((sum, p) => sum + p.amount, 0);
+    
+    if (confirm(`Process ${pendingPayouts.length} payouts totaling $${totalAmount.toFixed(2)}?`)) {
+        showNotification('Processing payouts...');
+        
+        // Simulate processing
+        setTimeout(() => {
+            // Mark cleanings as paid
+            pendingPayouts.forEach(payout => {
+                payout.cleanings.forEach(checklist => {
+                    checklist.paidToCleaner = true;
+                    checklist.payoutDate = new Date().toISOString();
+                    checklist.payoutAmount = payout.amount / payout.cleanings.length;
+                });
+            });
+            
+            // Save payout record
+            const payoutRecord = {
+                id: generateId(),
+                date: new Date().toISOString(),
+                payouts: pendingPayouts.map(p => ({
+                    cleanerId: p.cleanerId,
+                    cleanerName: p.cleanerName,
+                    amount: p.amount,
+                    cleaningCount: p.cleaningCount
+                })),
+                totalAmount: totalAmount,
+                status: 'completed'
+            };
+            
+            const payoutHistory = loadFromLocalStorage('payoutHistory') || [];
+            payoutHistory.unshift(payoutRecord);
+            saveToLocalStorage('payoutHistory', payoutHistory);
+            
+            saveToLocalStorage('checklists', checklists);
+            
+            showNotification(`Successfully processed ${pendingPayouts.length} payouts!`, 'success');
+            loadPendingPayouts();
+            loadPayoutHistory();
+        }, 2000);
+    }
+}
+
+function loadPayoutHistory() {
+    const history = loadFromLocalStorage('payoutHistory') || [];
+    const container = document.getElementById('payoutHistoryList');
+    
+    if (history.length === 0) {
+        container.innerHTML = '<p class="empty-state">No payout history yet</p>';
+        return;
+    }
+    
+    container.innerHTML = history.slice(0, 10).map(record => `
+        <div class="history-item">
+            <div class="history-info">
+                <h4>${new Date(record.date).toLocaleDateString()}</h4>
+                <p>${record.payouts.length} cleaners • $${record.totalAmount.toFixed(2)} total</p>
+            </div>
+            <div class="history-status">
+                <span class="status-badge completed">Completed</span>
+                <button class="btn btn-sm btn-outline" onclick="viewPayoutRecord('${record.id}')">
+                    <i class="fas fa-receipt"></i> View
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function viewPayoutDetails(cleanerId) {
+    const cleaner = teamMembers.find(m => m.id === cleanerId);
+    const cleanings = checklists.filter(c => 
+        c.cleanerId === cleanerId && 
+        c.status === 'completed' && 
+        !c.paidToCleaner
+    );
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Payout Details - ${cleaner.name}</h2>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="payout-details">
+                    <h3>Cleanings (${cleanings.length})</h3>
+                    ${cleanings.map(checklist => {
+                        const property = properties.find(p => p.id === checklist.propertyId);
+                        const propertySize = getPropertySize(property?.bedrooms || 1);
+                        const pricing = calculatePricing(checklist.template || 'standard', propertySize);
+                        
+                        return `
+                            <div class="detail-item">
+                                <div>
+                                    <strong>${property?.name || 'Unknown'}</strong><br>
+                                    <small>${new Date(checklist.completedAt || checklist.scheduledDate).toLocaleDateString()}</small>
+                                </div>
+                                <span>$${pricing.cleanerPayout.toFixed(2)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                    <div class="detail-total">
+                        <strong>Total Payout</strong>
+                        <strong>$${cleanings.reduce((sum, c) => {
+                            const property = properties.find(p => p.id === c.propertyId);
+                            const propertySize = getPropertySize(property?.bedrooms || 1);
+                            const pricing = calculatePricing(c.template || 'standard', propertySize);
+                            return sum + pricing.cleanerPayout;
+                        }, 0).toFixed(2)}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function connectStripe() {
+    showNotification('Opening Stripe Connect...');
+    
+    // In production, would redirect to Stripe OAuth
+    setTimeout(() => {
+        document.getElementById('stripeStatus').innerHTML = `
+            <span class="status-indicator connected">Connected</span>
+            <p class="status-detail">Account: acct_1234...ABCD</p>
+        `;
+        showNotification('Stripe account connected successfully!', 'success');
+    }, 2000);
+}
+
+function updatePayoutSettings() {
+    const settings = {
+        autoPayouts: document.getElementById('autoPayouts').checked,
+        frequency: document.getElementById('payoutFrequency').value,
+        day: document.getElementById('payoutDay').value
+    };
+    
+    saveToLocalStorage('payoutSettings', settings);
+    showNotification('Payout settings updated');
 }
 
 // Integration Functions
