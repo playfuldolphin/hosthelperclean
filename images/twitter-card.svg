@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="600" fill="#3182ce"/>
+  
+  <text x="600" y="240" font-family="Arial, sans-serif" font-size="64" fill="white" text-anchor="middle" font-weight="bold">Host Helper Clean</text>
+  <text x="600" y="330" font-family="Arial, sans-serif" font-size="32" fill="white" text-anchor="middle" opacity="0.9">Cleaning Management for Rental Properties</text>
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">Trusted by 2,500+ Airbnb & VRBO Hosts</text>
+
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="800" fill="#f7fafc"/>
+  
+  <rect width="400" height="800" fill="#f7fafc"/>
+  <rect width="400" height="60" fill="#3182ce"/>
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="bold">Host Helper</text>
+  
+  <rect x="20" y="80" width="360" height="140" fill="white" rx="12" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="120" font-family="Arial, sans-serif" font-size="18" fill="#2d3748" font-weight="bold">Dashboard</text>
+  <text x="40" y="150" font-family="Arial, sans-serif" font-size="14" fill="#718096">Upcoming Cleanings: 5</text>
+  <text x="40" y="180" font-family="Arial, sans-serif" font-size="14" fill="#718096">Active Properties: 3</text>
+  <text x="40" y="210" font-family="Arial, sans-serif" font-size="14" fill="#718096">This Month: $1,250</text>
+
+</svg>

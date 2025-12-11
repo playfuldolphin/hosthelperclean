@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="800" fill="#f7fafc"/>
+  
+  <rect width="400" height="800" fill="#f7fafc"/>
+  <rect width="400" height="60" fill="#3182ce"/>
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="bold">Cleaning Checklist</text>
+  
+  <rect x="20" y="80" width="360" height="60" fill="white" rx="8" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="115" font-family="Arial, sans-serif" font-size="16" fill="#2d3748">✓ Kitchen cleaned</text>
+  
+  <rect x="20" y="150" width="360" height="60" fill="white" rx="8" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="185" font-family="Arial, sans-serif" font-size="16" fill="#2d3748">✓ Bathroom sanitized</text>
+  
+  <rect x="20" y="220" width="360" height="60" fill="white" rx="8" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="255" font-family="Arial, sans-serif" font-size="16" fill="#2d3748">□ Bedroom tidied</text>
+
+</svg>

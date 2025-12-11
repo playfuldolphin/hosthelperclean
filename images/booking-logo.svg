@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160" height="60" xmlns="http://www.w3.org/2000/svg">
+  <rect width="160" height="60" fill="#003580"/>
+  
+  <rect width="160" height="60" fill="#003580" rx="8"/>
+  <text x="80" y="30" font-family="Arial, sans-serif" font-size="18" fill="white" text-anchor="middle" font-weight="bold">Booking.com</text>
+
+</svg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#3182ce"/>
+  
+  <circle cx="96" cy="96" r="70" fill="#ffffff" opacity="0.2"/>
+  <text x="96" y="110" font-family="Arial, sans-serif" font-size="100" fill="white" text-anchor="middle">🧹</text>
+
+</svg>
