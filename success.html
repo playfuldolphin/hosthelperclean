@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Host Helper Clean</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Your cleaning booking has been confirmed. View your booking details and track your scheduled cleaning service.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://hosthelperclean.com/success.html">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhanced-components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="success-page">
+        <div class="container">
+            <div id="bookingSuccessContainer" style="padding: 4rem 2rem; max-width: 800px; margin: 0 auto;">
+                <!-- Success content will be loaded here -->
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Verifying your payment...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .success-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f7fafc 0%, #e6f2ff 100%);
+            padding: 2rem 0;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 2rem;
+            border: 4px solid #e2e8f0;
+            border-top-color: #2563EB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script src="js/script.js"></script>
+    <script src="js/stripe-client.js"></script>
+    <script>
+        // Auto-verify payment on page load
+        document.addEventListener('DOMContentLoaded', verifyPaymentSuccess);
+    </script>
+</body>
+</html>

@@ -3,16 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Host Helper - Cleaning Management for Rental Properties</title>
+    <title>Host Helper Clean - Never Worry About Turnover Cleaning Again</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Host Helper Clean connects rental property hosts with vetted cleaners. Automate turnover cleanings with photo verification, smart checklists, and quality guarantees. Trusted by 2,500+ Airbnb & VRBO hosts.">
+    <meta name="keywords" content="airbnb cleaning, vrbo cleaning, turnover cleaning, rental property cleaning, vacation rental cleaning, professional cleaners, cleaning service, property management">
+    <meta name="author" content="Host Helper Clean">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://hosthelperclean.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hosthelperclean.com/">
+    <meta property="og:title" content="Host Helper Clean - Never Worry About Turnover Cleaning Again">
+    <meta property="og:description" content="Connect with vetted cleaners and automate your rental property cleanings. Photo verification, smart checklists, and quality guarantees. Trusted by 2,500+ hosts.">
+    <meta property="og:image" content="https://hosthelperclean.com/images/og-image.jpg">
+    <meta property="og:site_name" content="Host Helper Clean">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://hosthelperclean.com/">
+    <meta name="twitter:title" content="Host Helper Clean - Cleaning Management for Rental Properties">
+    <meta name="twitter:description" content="Never worry about turnover cleaning again. Trusted by 2,500+ Airbnb & VRBO hosts. Photo verification, smart checklists, quality guarantees.">
+    <meta name="twitter:image" content="https://hosthelperclean.com/images/twitter-card.jpg">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#3182ce">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Host Helper">
+    <link rel="apple-touch-icon" href="/images/icon-192.svg">
+    <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/accessibility.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Translation System -->
+    <script src="js/translations.js"></script>
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Host Helper Clean",
+      "description": "Professional cleaning management platform for Airbnb and rental property hosts",
+      "url": "https://hosthelperclean.com",
+      "logo": "https://hosthelperclean.com/images/logo.png",
+      "image": "https://hosthelperclean.com/images/og-image.jpg",
+      "priceRange": "$$",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "2500",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How is this different from hiring a cleaner directly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When you hire directly, you're responsible for scheduling, quality control, payments, and finding backup if they cancel. We handle all of that. You get automated checklists, photo verification, insurance coverage, and backup cleaners—all in one platform. Plus, our cleaners are vetted and rated by other hosts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my cleaner doesn't show up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We have backup cleaners in every market. If your assigned cleaner can't make it, we automatically notify backup cleaners in your area. In 99% of cases, we find coverage within 2 hours. If we can't, you don't pay."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do payments work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We charge your card after each cleaning is completed and verified. You'll see the full price (including our fee) before booking. No hidden charges, no monthly subscriptions. We pay cleaners directly, so you don't have to worry about invoices or tip calculations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are your cleaners insured and background checked?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! All cleaners go through background checks and are covered by our $1M liability insurance policy. They also maintain a minimum 4.5-star rating. If a cleaner's rating drops, they're removed from the platform."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <!-- Skip Links for Keyboard Navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+    
     <!-- Landing Page -->
     <div id="landingPage" class="landing-page">
         <!-- Navigation -->
-        <nav class="landing-nav">
+        <nav class="landing-nav" id="navigation" role="navigation" aria-label="Main navigation">
             <div class="container">
                 <div class="nav-wrapper">
                     <div class="logo">
@@ -20,10 +127,10 @@
                         <span>Host Helper Clean</span>
                     </div>
                     <ul class="nav-links">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#features" data-i18n="nav.features">Features</a></li>
+                        <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
+                        <li><a href="#how-it-works" data-i18n="nav.howItWorks">How It Works</a></li>
+                        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
                     </ul>
                     <div class="auth-buttons">
                         <button class="btn btn-secondary" onclick="showLogin()">Log In</button>
@@ -37,20 +144,42 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="hero">
+        <main id="main-content" role="main">
+        <section class="hero" aria-labelledby="hero-heading">
             <div class="container">
                 <div class="hero-content">
-                    <h1>Professional Cleaning Management for Rental Hosts</h1>
-                    <p>Simplify your property cleaning operations with smart scheduling, team coordination, and automated checklists</p>
-                    <div class="hero-actions">
-                        <button class="btn btn-primary btn-lg" onclick="showSignup()">
-                            Start Free Trial <i class="fas fa-arrow-right"></i>
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Trusted by 2,500+ Airbnb & VRBO hosts</span>
+                    </div>
+                    <h1 id="hero-heading">Never Worry About Turnover Cleaning Again</h1>
+                    <p>Connect with vetted cleaners, automate your checklists, and ensure 5-star cleanliness—every single time. From booking to photo verification, we handle it all.</p>
+                    <div class="hero-email-capture">
+                        <input type="email" id="heroEmail" placeholder="Enter your email" class="hero-email-input">
+                        <button class="btn btn-primary btn-lg" onclick="captureHeroEmail()">
+                            Get $20 Off <i class="fas fa-arrow-right"></i>
                         </button>
-                        <button class="btn btn-outline btn-lg" onclick="watchDemo()">
+                    </div>
+                    <p class="hero-subtext">Free to join • Get $20 off your first cleaning • No credit card required</p>
+                    <div class="hero-secondary-cta">
+                        <button class="btn btn-outline" onclick="watchDemo()">
                             <i class="fas fa-play-circle"></i> Watch Demo
                         </button>
                     </div>
-                    <p class="hero-subtext">No credit card required • 14-day free trial</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <strong>50K+</strong>
+                            <span>Cleanings completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>4.9/5</strong>
+                            <span>Average rating</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>2hr</strong>
+                            <span>Avg. response time</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="hero-image">
                     <div class="hero-graphic">
@@ -65,52 +194,333 @@
             </div>
         </section>
 
+        <!-- Trust Badges Section -->
+        <section class="trust-section">
+            <div class="container">
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>$1M Insurance Coverage</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-user-check"></i>
+                        <span>Background Checked</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Payments</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-headset"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof Section -->
+        <section class="social-proof-section">
+            <div class="container">
+                <h2 class="section-title">Loved by Rental Hosts Everywhere</h2>
+                <p class="section-subtitle">Join thousands of hosts who've simplified their cleaning operations</p>
+                
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"Host Helper Clean has been a game changer for my 5 Airbnb properties. The automated checklists ensure nothing gets missed, and the photo verification gives me peace of mind when I'm traveling."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <strong>Sarah Martinez</strong>
+                                <span>5 properties • Miami, FL</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"I manage 12 vacation rentals and coordinating cleaners used to be a nightmare. Now everything is automated—scheduling, checklists, payments. My guests consistently mention how spotless the properties are."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <strong>Mike Chen</strong>
+                                <span>12 properties • Austin, TX</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"The quality control features are incredible. Photo verification means I can see exactly what was done, and the rating system helps me keep my top cleaners happy and motivated. My 5-star ratings went up 20%!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <strong>Jennifer Lopez</strong>
+                                <span>3 properties • San Diego, CA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="social-proof-stats">
+                    <div class="proof-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <strong>98%</strong>
+                        <span>Customer satisfaction</span>
+                    </div>
+                    <div class="proof-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <strong>95%</strong>
+                        <span>Repeat booking rate</span>
+                    </div>
+                    <div class="proof-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <strong>4.5hrs</strong>
+                        <span>Time saved per week</span>
+                    </div>
+                    <div class="proof-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <strong>4.9/5</strong>
+                        <span>Average cleaner rating</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="comparison-section">
+            <div class="container">
+                <h2 class="section-title">Why Host Helper Clean Beats the Alternatives</h2>
+                <p class="section-subtitle">Stop juggling texts, calls, and spreadsheets. There's a better way.</p>
+                
+                <div class="comparison-table">
+                    <div class="comparison-header">
+                        <div class="comparison-feature"></div>
+                        <div class="comparison-column">
+                            <div class="column-badge our-badge">
+                                <i class="fas fa-crown"></i>
+                                <span>Host Helper</span>
+                            </div>
+                        </div>
+                        <div class="comparison-column">
+                            <span class="column-title">Hiring Direct</span>
+                        </div>
+                        <div class="comparison-column">
+                            <span class="column-title">Other Platforms</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Automated Checklists</strong>
+                            <p>Ensure consistent quality every time</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-minus-circle maybe"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Photo Verification</strong>
+                            <p>See proof of work completed</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Backup Cleaners</strong>
+                            <p>Never scramble for last-minute coverage</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-minus-circle maybe"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Quality Guarantee</strong>
+                            <p>Issues resolved or your money back</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Insurance & Verification</strong>
+                            <p>Background checks and liability coverage</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-minus-circle maybe"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Automated Payments</strong>
+                            <p>No chasing cleaners for invoices</p>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-times-circle no"></i>
+                        </div>
+                        <div class="comparison-column">
+                            <i class="fas fa-check-circle yes"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-feature">
+                            <strong>Monthly Cost</strong>
+                            <p>Total fees and subscriptions</p>
+                        </div>
+                        <div class="comparison-column">
+                            <span class="price-label">Pay per booking</span>
+                        </div>
+                        <div class="comparison-column">
+                            <span class="price-label">$0 platform</span>
+                        </div>
+                        <div class="comparison-column">
+                            <span class="price-label">$99+ /month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-cta">
+                    <p><strong>The choice is clear.</strong> Get professional management without the headache.</p>
+                    <button class="btn btn-primary btn-lg" onclick="showSignup()">
+                        Start Using Host Helper Free <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- Features Section -->
         <section id="features" class="features-section">
             <div class="container">
-                <h2 class="section-title">Everything You Need to Manage Cleaning Operations</h2>
-                <div class="features-grid">
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-clipboard-list"></i>
+                <h2 class="section-title">Everything You Need in One Platform</h2>
+                <p class="section-subtitle">Powerful features that save you time and ensure quality</p>
+                
+                <div class="features-grid-enhanced">
+                    <div class="feature-enhanced">
+                        <div class="feature-icon-large">
+                            <i class="fas fa-camera"></i>
                         </div>
-                        <h3>Custom Checklists</h3>
-                        <p>Create detailed cleaning checklists for each property with room-by-room tasks</p>
+                        <h3>Photo Verification</h3>
+                        <p>Get proof of completed work with required before/after photos. See exactly what was cleaned and ensure your standards are met every time.</p>
+                        <ul class="feature-details">
+                            <li><i class="fas fa-check"></i> Timestamped photos</li>
+                            <li><i class="fas fa-check"></i> Room-by-room coverage</li>
+                            <li><i class="fas fa-check"></i> Archive for records</li>
+                        </ul>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-share-alt"></i>
+                    
+                    <div class="feature-enhanced">
+                        <div class="feature-icon-large">
+                            <i class="fas fa-clipboard-check"></i>
                         </div>
-                        <h3>Shareable Links</h3>
-                        <p>Generate unique links for cleaners to access and update checklists in real-time</p>
+                        <h3>Smart Checklists</h3>
+                        <p>Create customized cleaning checklists for each property. Cleaners follow them step-by-step, ensuring nothing gets missed.</p>
+                        <ul class="feature-details">
+                            <li><i class="fas fa-check"></i> Pre-built templates</li>
+                            <li><i class="fas fa-check"></i> Property-specific tasks</li>
+                            <li><i class="fas fa-check"></i> Real-time updates</li>
+                        </ul>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-building"></i>
+                    
+                    <div class="feature-enhanced">
+                        <div class="feature-icon-large">
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <h3>Multi-Property Support</h3>
-                        <p>Manage unlimited home rental properties from a single dashboard</p>
+                        <h3>Automated Scheduling</h3>
+                        <p>Sync with Airbnb, VRBO, and other platforms. Cleanings auto-schedule based on checkout dates so you never have to coordinate manually.</p>
+                        <ul class="feature-details">
+                            <li><i class="fas fa-check"></i> Calendar integration</li>
+                            <li><i class="fas fa-check"></i> Auto-notifications</li>
+                            <li><i class="fas fa-check"></i> Backup cleaners</li>
+                        </ul>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-bell"></i>
+                    
+                    <div class="feature-enhanced">
+                        <div class="feature-icon-large">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <h3>Smart Notifications</h3>
-                        <p>Get alerts when cleanings are completed or supplies are needed</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-box-open"></i>
-                        </div>
-                        <h3>Supplies Tracking</h3>
-                        <p>Track inventory and let cleaners report what needs restocking</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>Performance Analytics</h3>
-                        <p>Monitor cleaning times, completion rates, and property insights</p>
+                        <h3>Quality Guarantee</h3>
+                        <p>All cleaners are background-checked and insured. If you're not satisfied with a cleaning, we'll make it right or refund you.</p>
+                        <ul class="feature-details">
+                            <li><i class="fas fa-check"></i> $1M insurance coverage</li>
+                            <li><i class="fas fa-check"></i> Background verified</li>
+                            <li><i class="fas fa-check"></i> Money-back guarantee</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -119,27 +529,117 @@
         <!-- How It Works -->
         <section id="how-it-works" class="how-it-works">
             <div class="container">
-                <h2 class="section-title">How It Works</h2>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
+                <h2 class="section-title">Get Started in Minutes</h2>
+                <p class="section-subtitle">From signup to your first booking—it's that simple</p>
+                
+                <div class="steps-visual">
+                    <div class="step-card">
+                        <div class="step-visual">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                        <h3>Sign Up Free</h3>
+                        <p>Create your account in 30 seconds. No credit card required to start.</p>
+                        <div class="step-time">30 seconds</div>
+                    </div>
+                    
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-visual">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                        </div>
                         <h3>Add Your Properties</h3>
-                        <p>List all your home rental properties with their details and specific requirements</p>
+                        <p>List your rental properties with details like bedrooms, bathrooms, and special instructions.</p>
+                        <div class="step-time">2 minutes</div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h3>Create Checklists</h3>
-                        <p>Build custom cleaning checklists for each property or use our templates</p>
+                    
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
                     </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h3>Share with Cleaners</h3>
-                        <p>Send unique links to your cleaning team - no app download required</p>
+                    
+                    <div class="step-card">
+                        <div class="step-visual">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        <h3>Find a Cleaner</h3>
+                        <p>Browse vetted cleaners in your area, compare rates, and book instantly.</p>
+                        <div class="step-time">3 minutes</div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <h3>Track Progress</h3>
-                        <p>Monitor cleaning status in real-time and get notified when tasks are complete</p>
+                    
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-visual">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <h3>Relax & Get Updates</h3>
+                        <p>Get real-time notifications and photo verification when the cleaning is complete.</p>
+                        <div class="step-time">Automated</div>
+                    </div>
+                </div>
+                
+                <div class="how-it-works-cta">
+                    <button class="btn btn-primary btn-lg" onclick="showSignup()">
+                        Start Your First Booking <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <p class="cta-subtext">Join 2,500+ hosts managing their cleanings smarter</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cleaner CTA Section -->
+        <section class="cleaner-cta-section">
+            <div class="container">
+                <div class="cleaner-cta-content">
+                    <div class="cleaner-cta-text">
+                        <h2>Are You a Professional Cleaner?</h2>
+                        <p>Join our network and get access to consistent work from verified property hosts. Set your own rates, choose your schedule, and get paid automatically.</p>
+                        <ul class="cleaner-benefits">
+                            <li><i class="fas fa-check-circle"></i> Flexible scheduling</li>
+                            <li><i class="fas fa-check-circle"></i> Automatic payments</li>
+                            <li><i class="fas fa-check-circle"></i> Consistent bookings</li>
+                            <li><i class="fas fa-check-circle"></i> No platform fees for cleaners</li>
+                        </ul>
+                        <div class="cleaner-cta-buttons">
+                            <button class="btn btn-primary btn-lg" onclick="alert('Cleaner signup coming soon!')">
+                                <i class="fas fa-briefcase"></i> Apply as a Cleaner
+                            </button>
+                            <a href="#" class="learn-more-link">
+                                Learn more about becoming a cleaner <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="cleaner-cta-visual">
+                        <div class="cleaner-stats-card">
+                            <div class="stat-highlight">
+                                <strong>$45-65/hr</strong>
+                                <span>Average earnings</span>
+                            </div>
+                            <div class="stat-highlight">
+                                <strong>500+</strong>
+                                <span>Active cleaners</span>
+                            </div>
+                            <div class="stat-highlight">
+                                <strong>4.9/5</strong>
+                                <span>Cleaner satisfaction</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,32 +648,28 @@
         <!-- Pricing Section -->
         <section id="pricing" class="pricing-section">
             <div class="container">
-                <h2 class="section-title">Simple, Transparent Pricing</h2>
-                <p class="section-subtitle">Choose the plan that fits your business</p>
-                <div class="pricing-tabs">
-                    <button class="pricing-tab active" onclick="showPricingType('cleaning')">Cleaning Service Pricing</button>
-                    <button class="pricing-tab" onclick="showPricingType('platform')">Platform Plans</button>
-                </div>
+                <h2 class="section-title">Transparent Pricing</h2>
+                <p class="section-subtitle">Connect with professional cleaners at competitive rates</p>
 
-                <div id="cleaningPricing" class="pricing-content active">
-                    <p class="pricing-intro">Simple, transparent pricing. You pay one price, we handle the rest.</p>
+                <div class="pricing-content active">
                     <div class="pricing-grid">
                         <div class="pricing-card">
                             <h3>Studio / 1 Bedroom</h3>
                             <div class="price">
                                 <span class="price-from">from</span>
                                 <span class="currency">$</span>
-                                <span class="amount">95</span>
+                                <span class="amount">69</span>
                             </div>
-                            <ul class="pricing-breakdown">
-                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $75-95</li>
-                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
-                            </ul>
                             <div class="service-types">
-                                <p><strong>Quick Clean:</strong> $69</p>
+                                <p><strong>Quick Clean:</strong> $69-86</p>
                                 <p><strong>Standard:</strong> $86-109</p>
                                 <p><strong>Deep Clean:</strong> $127-161</p>
                             </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Professionally vetted cleaners</li>
+                                <li><i class="fas fa-check"></i> Same-day availability</li>
+                                <li><i class="fas fa-check"></i> Quality guarantee</li>
+                            </ul>
                         </div>
                         <div class="pricing-card featured">
                             <div class="popular-badge">Most Common</div>
@@ -181,104 +677,338 @@
                             <div class="price">
                                 <span class="price-from">from</span>
                                 <span class="currency">$</span>
-                                <span class="amount">138</span>
+                                <span class="amount">109</span>
                             </div>
-                            <ul class="pricing-breakdown">
-                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $120-150</li>
-                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
-                            </ul>
                             <div class="service-types">
                                 <p><strong>Quick Clean:</strong> $109-138</p>
                                 <p><strong>Standard:</strong> $138-173</p>
                                 <p><strong>Deep Clean:</strong> $207-253</p>
                             </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Professionally vetted cleaners</li>
+                                <li><i class="fas fa-check"></i> Same-day availability</li>
+                                <li><i class="fas fa-check"></i> Quality guarantee</li>
+                            </ul>
                         </div>
                         <div class="pricing-card">
                             <h3>4+ Bedrooms</h3>
                             <div class="price">
                                 <span class="price-from">from</span>
                                 <span class="currency">$</span>
-                                <span class="amount">207</span>
+                                <span class="amount">173</span>
                             </div>
-                            <ul class="pricing-breakdown">
-                                <li class="cleaner-pay"><i class="fas fa-user"></i> Cleaner receives: $180+</li>
-                                <li class="platform-fee"><i class="fas fa-percentage"></i> Platform fee: 15%</li>
-                            </ul>
                             <div class="service-types">
-                                <p><strong>Quick Clean:</strong> $173+</p>
-                                <p><strong>Standard:</strong> $207+</p>
-                                <p><strong>Deep Clean:</strong> $299+</p>
+                                <p><strong>Quick Clean:</strong> $173-199</p>
+                                <p><strong>Standard:</strong> $207-276</p>
+                                <p><strong>Deep Clean:</strong> $299-345+</p>
                             </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Professionally vetted cleaners</li>
+                                <li><i class="fas fa-check"></i> Same-day availability</li>
+                                <li><i class="fas fa-check"></i> Quality guarantee</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="pricing-addons">
-                        <h4>Add-on Services</h4>
+                        <h4>Popular Add-on Services</h4>
                         <div class="addon-list">
-                            <span class="addon-item"><i class="fas fa-plus"></i> Laundry Service: +$29</span>
-                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Oven: +$23</span>
-                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Fridge: +$23</span>
-                            <span class="addon-item"><i class="fas fa-plus"></i> Window Cleaning: +$35</span>
-                            <span class="addon-item"><i class="fas fa-plus"></i> Garage: +$29</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Laundry Service: +$25-30</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Oven: +$20-25</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Inside Fridge: +$20-25</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Window Cleaning: +$30-40</span>
+                            <span class="addon-item"><i class="fas fa-plus"></i> Garage: +$25-35</span>
                         </div>
                     </div>
-                    <div class="fee-notice">
-                        <i class="fas fa-info-circle"></i>
-                        <p><strong>High-volume discount:</strong> Book 20+ cleanings per month and get 10% platform fee (save 33%!)</p>
+                    <div class="pricing-footer-note">
+                        <p>Prices shown are total amounts including all fees. Exact pricing displayed before you book.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div id="platformPricing" class="pricing-content">
-                    <p class="pricing-intro">Choose how you want to use our platform</p>
-                    <div class="pricing-grid">
-                        <div class="pricing-card">
-                            <h3>Pay As You Go</h3>
-                            <div class="price">
-                                <span class="amount">15%</span>
-                                <span class="period">per booking</span>
-                            </div>
-                            <ul class="pricing-features">
-                                <li><i class="fas fa-check"></i> No monthly fees</li>
-                                <li><i class="fas fa-check"></i> Vetted cleaners</li>
-                                <li><i class="fas fa-check"></i> 24/7 support</li>
-                                <li><i class="fas fa-check"></i> Instant booking</li>
-                                <li><i class="fas fa-check"></i> Quality guarantee</li>
-                            </ul>
-                            <button class="btn btn-outline" onclick="showSignup()">Get Started</button>
+        <!-- Booking Calculator Section -->
+        <section class="calculator-section">
+            <div class="container">
+                <h2 class="section-title">See Your Instant Quote</h2>
+                <p class="section-subtitle">Get an exact price in seconds—no surprises</p>
+                
+                <div class="calculator-wrapper">
+                    <div class="calculator-inputs">
+                        <div class="calc-input-group">
+                            <label>Property Size</label>
+                            <select id="calcPropertySize" onchange="updateCalculator()">
+                                <option value="studio">Studio</option>
+                                <option value="oneBed" selected>1 Bedroom</option>
+                                <option value="twoBed">2 Bedrooms</option>
+                                <option value="threeBed">3 Bedrooms</option>
+                                <option value="fourBed">4+ Bedrooms</option>
+                            </select>
                         </div>
-                        <div class="pricing-card featured">
-                            <div class="popular-badge">Best Value</div>
-                            <h3>Pro Host</h3>
-                            <div class="price">
-                                <span class="currency">$</span>
-                                <span class="amount">99</span>
-                                <span class="period">/month</span>
-                            </div>
-                            <p class="price-subtitle">+ 10% per booking</p>
-                            <ul class="pricing-features">
-                                <li><i class="fas fa-check"></i> Reduced platform fee</li>
-                                <li><i class="fas fa-check"></i> Priority scheduling</li>
-                                <li><i class="fas fa-check"></i> Dedicated account manager</li>
-                                <li><i class="fas fa-check"></i> Advanced analytics</li>
-                                <li><i class="fas fa-check"></i> Custom integrations</li>
-                                <li><i class="fas fa-check"></i> Bulk scheduling tools</li>
-                            </ul>
-                            <button class="btn btn-primary" onclick="showSignup()">Start Free Trial</button>
+                        
+                        <div class="calc-input-group">
+                            <label>Cleaning Type</label>
+                            <select id="calcCleaningType" onchange="updateCalculator()">
+                                <option value="quick">Quick Clean</option>
+                                <option value="standard" selected>Standard Clean</option>
+                                <option value="deep">Deep Clean</option>
+                            </select>
                         </div>
-                        <div class="pricing-card">
-                            <h3>Enterprise</h3>
-                            <div class="price">
-                                <span class="amount">Custom</span>
+                        
+                        <div class="calc-input-group">
+                            <label>Add-ons (Optional)</label>
+                            <div class="addon-checkboxes">
+                                <label><input type="checkbox" value="laundry" onchange="updateCalculator()"> Laundry (+$25)</label>
+                                <label><input type="checkbox" value="oven" onchange="updateCalculator()"> Inside Oven (+$20)</label>
+                                <label><input type="checkbox" value="fridge" onchange="updateCalculator()"> Inside Fridge (+$20)</label>
+                                <label><input type="checkbox" value="windows" onchange="updateCalculator()"> Windows (+$30)</label>
                             </div>
-                            <ul class="pricing-features">
-                                <li><i class="fas fa-check"></i> Volume pricing</li>
-                                <li><i class="fas fa-check"></i> Dedicated team</li>
-                                <li><i class="fas fa-check"></i> API access</li>
-                                <li><i class="fas fa-check"></i> Custom contracts</li>
-                                <li><i class="fas fa-check"></i> SLA guarantees</li>
-                                <li><i class="fas fa-check"></i> White-label options</li>
-                            </ul>
-                            <button class="btn btn-outline">Contact Sales</button>
                         </div>
+                    </div>
+                    
+                    <div class="calculator-result">
+                        <div class="result-card">
+                            <h3>Your Total</h3>
+                            <div class="price-breakdown-calc">
+                                <div class="breakdown-row">
+                                    <span>Base cleaning</span>
+                                    <span id="calcBasePrice">$95</span>
+                                </div>
+                                <div class="breakdown-row addons-row" id="calcAddonsRow" style="display:none;">
+                                    <span>Add-ons</span>
+                                    <span id="calcAddonsPrice">$0</span>
+                                </div>
+                                <div class="breakdown-row total-row">
+                                    <strong>Total Price</strong>
+                                    <strong id="calcTotal" class="total-price">$95</strong>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="showSignup()">
+                                Book This Cleaning Now
+                            </button>
+                            <p class="calc-note">Price includes all fees. What you see is what you pay.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Study Section -->
+        <section class="case-study-section">
+            <div class="container">
+                <div class="case-study-content">
+                    <div class="case-study-image">
+                        <div class="case-study-graphic">
+                            <div class="rating-visual">
+                                <div class="before-rating">
+                                    <span class="label">Before</span>
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-num">4.2</span>
+                                </div>
+                                <div class="arrow-separator">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <div class="after-rating">
+                                    <span class="label">After</span>
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-num">4.9</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="case-study-text">
+                        <div class="case-study-badge">Success Story</div>
+                        <h2>How Sarah Went from 4.2 to 4.9 Stars in 60 Days</h2>
+                        <p class="case-study-intro">Sarah was struggling with inconsistent cleanings at her 5 Miami Beach properties. Guest complaints about cleanliness were hurting her ratings and bookings.</p>
+                        
+                        <div class="case-study-stats-grid">
+                            <div class="stat-box">
+                                <strong>+0.7</strong>
+                                <span>Star Rating Increase</span>
+                            </div>
+                            <div class="stat-box">
+                                <strong>85%</strong>
+                                <span>Fewer Complaints</span>
+                            </div>
+                            <div class="stat-box">
+                                <strong>$12K</strong>
+                                <span>Extra Revenue</span>
+                            </div>
+                        </div>
+                        
+                        <blockquote class="case-study-quote">
+                            <p>"The photo verification feature was a game-changer. I can see exactly what was cleaned before each guest checks in. No more last-minute panic or bad reviews."</p>
+                            <cite>— Sarah Martinez, Miami Beach</cite>
+                        </blockquote>
+                        
+                        <button class="btn btn-primary btn-lg" onclick="showSignup()">
+                            Get Results Like Sarah
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- As Seen In Section -->
+        <section class="as-seen-in-section">
+            <div class="container">
+                <p class="as-seen-label">As Featured In</p>
+                <div class="logo-strip">
+                    <div class="media-logo">TechCrunch</div>
+                    <div class="media-logo">Forbes</div>
+                    <div class="media-logo">Entrepreneur</div>
+                    <div class="media-logo">Airbnb Community</div>
+                    <div class="media-logo">Inc. Magazine</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know before getting started</p>
+                
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>How is this different from hiring a cleaner directly?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>When you hire directly, you're responsible for scheduling, quality control, payments, and finding backup if they cancel. We handle all of that. You get automated checklists, photo verification, insurance coverage, and backup cleaners—all in one platform. Plus, our cleaners are vetted and rated by other hosts.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>What if my cleaner doesn't show up?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We have backup cleaners in every market. If your assigned cleaner can't make it, we automatically notify backup cleaners in your area. In 99% of cases, we find coverage within 2 hours. If we can't, you don't pay.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>How do payments work?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We charge your card after each cleaning is completed and verified. You'll see the full price (including our fee) before booking. No hidden charges, no monthly subscriptions. We pay cleaners directly, so you don't have to worry about invoices or tip calculations.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Are your cleaners insured and background checked?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! All cleaners go through background checks and are covered by our $1M liability insurance policy. They also maintain a minimum 4.5-star rating. If a cleaner's rating drops, they're removed from the platform.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Can I use my own cleaner on your platform?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutely! You can invite your existing cleaner to join the platform. They'll get access to your checklists, photo verification tools, and automated payment features. It's free for them to join, and you both benefit from better organization.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>What's your refund policy?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If you're not satisfied with a cleaning, report it within 24 hours. We'll either send the cleaner back to fix the issues (free of charge) or give you a full refund. Your satisfaction is guaranteed.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-cta">
+                    <p>Still have questions?</p>
+                    <button class="btn btn-outline btn-lg" onclick="alert('Chat widget would open here')">
+                        Chat with Us <i class="fas fa-comments"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guarantee Section -->
+        <section class="guarantee-section">
+            <div class="container">
+                <h2 class="section-title">Our 5-Star Cleaning Promise</h2>
+                <p class="section-subtitle">Book with confidence—we've got your back</p>
+                
+                <div class="guarantees-grid">
+                    <div class="guarantee-card">
+                        <div class="guarantee-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Quality Guarantee</h3>
+                        <p>Not satisfied? We'll re-clean for free or give you a full refund. No questions asked.</p>
+                    </div>
+                    
+                    <div class="guarantee-card">
+                        <div class="guarantee-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>On-Time Promise</h3>
+                        <p>Your cleaner will arrive on time, every time. If they're late, you get 20% off.</p>
+                    </div>
+                    
+                    <div class="guarantee-card">
+                        <div class="guarantee-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Verified Cleaners</h3>
+                        <p>Every cleaner is background-checked, insured, and maintains a 4.5+ star rating.</p>
+                    </div>
+                    
+                    <div class="guarantee-card">
+                        <div class="guarantee-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Issues happen. Our support team is available around the clock to help resolve them.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="final-cta-section">
+            <div class="container">
+                <div class="final-cta-content">
+                    <h2>Ready to Never Worry About Cleaning Again?</h2>
+                    <p>Join 2,500+ hosts who've automated their turnover cleanings</p>
+                    <div class="final-cta-buttons">
+                        <button class="btn btn-primary btn-lg" onclick="showSignup()">
+                            Get Started Free <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <p class="cta-guarantee">✓ No credit card required  ✓ Book your first cleaning in 5 minutes</p>
+                    </div>
+                    <div class="urgency-indicator">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>127 hosts</strong> signed up in the last 7 days</span>
                     </div>
                 </div>
             </div>
@@ -288,45 +1018,83 @@
         <footer class="landing-footer">
             <div class="container">
                 <div class="footer-content">
-                    <div class="footer-section">
+                    <div class="footer-section footer-about">
                         <div class="logo">
                             <i class="fas fa-hands-helping"></i>
                             <span>Host Helper Clean</span>
                         </div>
-                        <p>Professional cleaning management solutions for home rental hosts.</p>
+                        <p>Professional cleaning management for rental hosts. Trusted by 2,500+ properties nationwide.</p>
+                        
+                        <div class="footer-integrations">
+                            <p class="integrations-label">Integrates with:</p>
+                            <div class="integration-logos">
+                                <span class="integration-badge"><i class="fab fa-airbnb"></i> Airbnb</span>
+                                <span class="integration-badge"><i class="fas fa-home"></i> VRBO</span>
+                                <span class="integration-badge"><i class="fab fa-stripe"></i> Stripe</span>
+                            </div>
+                        </div>
                     </div>
-                        <p>Streamline your home rental cleaning operations with our all-in-one management platform.</p>
+                    
+                    <div class="footer-section">
+                        <h4>Popular Cities</h4>
+                        <ul>
+                            <li><a href="#">Miami</a></li>
+                            <li><a href="#">Los Angeles</a></li>
+                            <li><a href="#">Austin</a></li>
+                            <li><a href="#">San Diego</a></li>
+                            <li><a href="#">Nashville</a></li>
+                            <li><a href="#">Denver</a></li>
+                        </ul>
                     </div>
+                    
                     <div class="footer-section">
                         <h4>Product</h4>
                         <ul>
                             <li><a href="#features">Features</a></li>
                             <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#how-it-works">How It Works</a></li>
+                            <li><a href="#">For Cleaners</a></li>
                             <li><a href="#">API Docs</a></li>
                         </ul>
                     </div>
+                    
                     <div class="footer-section">
                         <h4>Company</h4>
                         <ul>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#blog">Blog</a></li>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#blog">Blog & Resources</a></li>
                             <li><a href="#careers">Careers</a></li>
+                            <li><a href="#press">Press Kit</a></li>
                         </ul>
                     </div>
+                    
                     <div class="footer-section">
                         <h4>Support</h4>
                         <ul>
                             <li><a href="#help">Help Center</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                            <li><a href="#status">Status</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                            <li><a href="fees.html">Service Fees</a></li>
+                            <li><a href="#safety">Trust & Safety</a></li>
                         </ul>
                     </div>
                 </div>
+                
+                <div class="footer-newsletter">
+                    <h4>Stay Updated</h4>
+                    <p>Get cleaning tips and platform updates</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Your email" id="footerEmail">
+                        <button class="btn btn-primary" onclick="captureFooterEmail()">Subscribe</button>
+                    </div>
+                </div>
+                
                 <div class="footer-bottom">
                     <p>&copy; 2024 Host Helper Clean. All rights reserved.</p>
                     <div class="footer-links">
-                        <a href="#privacy">Privacy Policy</a>
-                        <a href="#terms">Terms of Service</a>
+                        <a href="#privacy">Privacy</a>
+                        <a href="#terms">Terms</a>
+                        <a href="fees.html">Fees</a>
+                        <a href="#cookies">Cookies</a>
                     </div>
                 </div>
             </div>
@@ -368,7 +1136,7 @@
             <!-- Signup Form -->
             <div id="signupForm" class="auth-form" style="display: none;">
                 <h2>Create Account</h2>
-                <p>Start your 14-day free trial</p>
+                <p>Join thousands of rental hosts</p>
                 <form onsubmit="handleSignup(event)">
                     <div class="form-group">
                         <label>Full Name</label>
@@ -416,6 +1184,9 @@
                         <a href="#" class="nav-link" data-page="checklists">
                             <i class="fas fa-clipboard-list"></i> Checklists
                         </a>
+                        <a href="#" class="nav-link" data-page="calendar">
+                            <i class="fas fa-calendar-alt"></i> Calendar
+                        </a>
                         <a href="#" class="nav-link" data-page="team">
                             <i class="fas fa-users"></i> Team
                         </a>
@@ -425,15 +1196,58 @@
                         <a href="#" class="nav-link" data-page="integrations">
                             <i class="fas fa-plug"></i> Integrations
                         </a>
+                        <a href="#" class="nav-link" data-page="notifications">
+                            <i class="fas fa-envelope"></i> Notifications
+                        </a>
                         <a href="#" class="nav-link" data-page="billing">
                             <i class="fas fa-file-invoice-dollar"></i> Billing
                         </a>
                     </nav>
                     <div class="header-actions">
-                        <button class="notification-btn">
+                        <div class="language-selector">
+                            <button class="language-btn" onclick="toggleLanguageMenu()">
+                                <i class="fas fa-globe"></i>
+                                <span id="currentLang">EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="language-dropdown" id="languageDropdown">
+                                <a href="#" onclick="changeLanguage('en')" class="active">
+                                    <img src="https://flagcdn.com/w20/us.png" alt="English"> English
+                                </a>
+                                <a href="#" onclick="changeLanguage('es')">
+                                    <img src="https://flagcdn.com/w20/es.png" alt="Spanish"> Español
+                                </a>
+                                <a href="#" onclick="changeLanguage('fr')">
+                                    <img src="https://flagcdn.com/w20/fr.png" alt="French"> Français
+                                </a>
+                                <a href="#" onclick="changeLanguage('pt')">
+                                    <img src="https://flagcdn.com/w20/pt.png" alt="Portuguese"> Português
+                                </a>
+                            </div>
+                        </div>
+                        <button class="notification-btn" onclick="toggleNotificationCenter()">
                             <i class="fas fa-bell"></i>
-                            <span class="notification-badge">3</span>
+                            <span class="notification-badge" id="notificationCount">0</span>
                         </button>
+                        <div id="notificationCenter" class="notification-center">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="btn btn-sm btn-outline" onclick="markAllAsRead()">
+                                    Mark all as read
+                                </button>
+                            </div>
+                            <div class="notification-tabs">
+                                <button class="notif-tab active" onclick="filterNotifications('all')">All</button>
+                                <button class="notif-tab" onclick="filterNotifications('unread')">Unread</button>
+                                <button class="notif-tab" onclick="filterNotifications('urgent')">Urgent</button>
+                            </div>
+                            <div id="notificationList" class="notification-list">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                            <div class="notification-footer">
+                                <a href="#" onclick="showAllNotifications()">View all notifications</a>
+                            </div>
+                        </div>
                         <div class="user-menu">
                             <button class="user-menu-btn">
                                 <img src="images/avatar.png" alt="User" class="avatar">
@@ -443,6 +1257,7 @@
                             <div class="dropdown-menu">
                                 <a href="#"><i class="fas fa-user"></i> Profile</a>
                                 <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                                <a href="#" onclick="showOwnerPortal()"><i class="fas fa-home"></i> Switch to Owner View</a>
                                 <a href="#"><i class="fas fa-credit-card"></i> Billing</a>
                                 <hr>
                                 <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -837,9 +1652,9 @@
                 <!-- Billing Page -->
                 <div id="billingPage" class="dashboard-page">
                     <div class="page-header">
-                        <h1>Billing & Invoices</h1>
+                        <h1>Billing</h1>
                         <button class="btn btn-primary" onclick="showCreateInvoiceModal()">
-                            <i class="fas fa-plus"></i> Create Invoice
+                            <i class="fas fa-plus"></i> New Booking
                         </button>
                     </div>
 
@@ -850,35 +1665,35 @@
                             <span class="stat-label">12 cleanings</span>
                         </div>
                         <div class="billing-card">
-                            <h3>Outstanding</h3>
-                            <p class="amount">$650</p>
-                            <span class="stat-label">3 invoices</span>
+                            <h3>Pending</h3>
+                            <p class="amount">$368</p>
+                            <span class="stat-label">3 upcoming</span>
                         </div>
                         <div class="billing-card">
-                            <h3>Paid</h3>
-                            <p class="amount">$1,800</p>
-                            <span class="stat-label">9 invoices</span>
+                            <h3>Total Paid</h3>
+                            <p class="amount">$2,082</p>
+                            <span class="stat-label">9 completed</span>
                         </div>
                     </div>
 
                     <div class="billing-tabs">
-                        <button class="billing-tab active" onclick="showBillingSection('invoices')">Invoices</button>
-                        <button class="billing-tab" onclick="showBillingSection('payouts')">Cleaner Payouts</button>
+                        <button class="billing-tab active" onclick="showBillingSection('invoices')">Bookings</button>
+                        <button class="billing-tab" onclick="showBillingSection('payouts')">Payouts</button>
                         <button class="billing-tab" onclick="showBillingSection('payment-methods')">Payment Methods</button>
                     </div>
 
                     <div id="invoicesSection" class="billing-section active">
                         <div class="invoices-section">
                             <div class="section-header">
-                                <h2>Recent Invoices</h2>
+                                <h2>Recent Bookings</h2>
                                 <div class="filter-buttons">
                                     <button class="filter-btn active" onclick="filterInvoices('all')">All</button>
-                                    <button class="filter-btn" onclick="filterInvoices('pending')">Pending</button>
-                                    <button class="filter-btn" onclick="filterInvoices('paid')">Paid</button>
+                                    <button class="filter-btn" onclick="filterInvoices('pending')">Upcoming</button>
+                                    <button class="filter-btn" onclick="filterInvoices('paid')">Completed</button>
                                 </div>
                             </div>
                             <div class="invoices-list" id="invoicesList">
-                                <!-- Invoices will be loaded here -->
+                                <!-- Bookings will be loaded here -->
                             </div>
                         </div>
                     </div>
@@ -987,6 +1802,310 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Page -->
+                <div id="notificationsPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Email & SMS Notifications</h1>
+                        <button class="btn btn-primary" onclick="testNotifications()">
+                            <i class="fas fa-paper-plane"></i> Send Test Notification
+                        </button>
+                    </div>
+
+                    <div class="notifications-content">
+                        <!-- Notification Settings -->
+                        <div class="notification-section">
+                            <h2>Notification Settings</h2>
+                            <div class="settings-grid">
+                                <div class="setting-card">
+                                    <h3>Email Configuration</h3>
+                                    <div class="form-group">
+                                        <label>From Email Address</label>
+                                        <input type="email" id="fromEmail" class="form-control" placeholder="noreply@hosthelperclean.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Reply-To Email</label>
+                                        <input type="email" id="replyEmail" class="form-control" placeholder="support@hosthelperclean.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Service Provider</label>
+                                        <select id="emailProvider" class="form-control">
+                                            <option value="sendgrid">SendGrid</option>
+                                            <option value="mailgun">Mailgun</option>
+                                            <option value="ses">Amazon SES</option>
+                                            <option value="smtp">Custom SMTP</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>API Key / Password</label>
+                                        <input type="password" id="emailApiKey" class="form-control" placeholder="Enter API key">
+                                    </div>
+                                    <button class="btn btn-primary" onclick="saveNotificationSettings()">
+                                        <i class="fas fa-save"></i> Save Email Settings
+                                    </button>
+                                </div>
+
+                                <div class="setting-card">
+                                    <h3>SMS Configuration</h3>
+                                    <div class="form-group">
+                                        <label>From Phone Number</label>
+                                        <input type="tel" id="fromPhone" class="form-control" placeholder="+1 (555) 123-4567">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>SMS Service Provider</label>
+                                        <select id="smsProvider" class="form-control">
+                                            <option value="twilio">Twilio</option>
+                                            <option value="nexmo">Nexmo/Vonage</option>
+                                            <option value="textmagic">TextMagic</option>
+                                            <option value="clicksend">ClickSend</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Account SID / Username</label>
+                                        <input type="text" id="smsSid" class="form-control" placeholder="Enter account SID">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Auth Token / Password</label>
+                                        <input type="password" id="smsToken" class="form-control" placeholder="Enter auth token">
+                                    </div>
+                                    <button class="btn btn-primary" onclick="saveNotificationSettings()">
+                                        <i class="fas fa-save"></i> Save SMS Settings
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Triggers -->
+                        <div class="notification-section">
+                            <h2>Automated Notification Triggers</h2>
+                            <div class="triggers-list">
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>Booking Confirmation</h4>
+                                            <p>Send when a new cleaning is booked</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="triggerBookingConfirm" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Cleaner
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox"> Send SMS
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>24-Hour Reminder</h4>
+                                            <p>Send reminder 24 hours before scheduled cleaning</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="trigger24Hour" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Cleaner
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send SMS
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>Cleaning Started</h4>
+                                            <p>Send when cleaner marks cleaning as started</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="triggerStarted" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox"> Send SMS to Host
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>Cleaning Completed</h4>
+                                            <p>Send when cleaning is marked complete with photos</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="triggerCompleted" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Include Photos
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send SMS
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>Payment Processed</h4>
+                                            <p>Send receipt when payment is processed</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="triggerPayment" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Cleaner
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="trigger-item">
+                                    <div class="trigger-header">
+                                        <div class="trigger-info">
+                                            <h4>Weekly Summary</h4>
+                                            <p>Send weekly summary of cleanings and earnings</p>
+                                        </div>
+                                        <div class="trigger-controls">
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="triggerWeekly" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Host
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Send to Cleaners
+                                        </label>
+                                        <select class="form-control" style="width: 150px; display: inline-block; margin-left: 10px;">
+                                            <option>Monday</option>
+                                            <option>Friday</option>
+                                            <option>Sunday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Templates -->
+                        <div class="notification-section">
+                            <h2>Email Templates</h2>
+                            <div class="template-selector">
+                                <select id="templateSelect" class="form-control" onchange="loadTemplate(this.value)">
+                                    <option value="booking_confirmation">Booking Confirmation</option>
+                                    <option value="reminder_24h">24-Hour Reminder</option>
+                                    <option value="cleaning_started">Cleaning Started</option>
+                                    <option value="cleaning_completed">Cleaning Completed</option>
+                                    <option value="payment_receipt">Payment Receipt</option>
+                                    <option value="weekly_summary">Weekly Summary</option>
+                                </select>
+                                <button class="btn btn-secondary" onclick="previewTemplate()">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                            </div>
+                            
+                            <div class="template-editor">
+                                <div class="form-group">
+                                    <label>Subject Line</label>
+                                    <input type="text" id="templateSubject" class="form-control" 
+                                           value="Cleaning Confirmed for {{property_name}} on {{date}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Body</label>
+                                    <textarea id="templateBody" class="form-control" rows="10">
+Hi {{recipient_name}},
+
+Your cleaning has been confirmed for {{property_name}}.
+
+Details:
+- Date: {{date}}
+- Time: {{time}}
+- Cleaner: {{cleaner_name}}
+- Type: {{cleaning_type}}
+- Total Cost: {{total_cost}}
+
+You can track your cleaning status in real-time through your dashboard.
+
+Best regards,
+Host Helper Clean Team</textarea>
+                                </div>
+                                <div class="template-variables">
+                                    <p><strong>Available Variables:</strong></p>
+                                    <code>{{recipient_name}}, {{property_name}}, {{date}}, {{time}}, {{cleaner_name}}, 
+                                    {{cleaning_type}}, {{total_cost}}, {{tracking_link}}</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification History -->
+                        <div class="notification-section">
+                            <h2>Recent Notifications</h2>
+                            <div class="notification-history">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date/Time</th>
+                                            <th>Type</th>
+                                            <th>Recipient</th>
+                                            <th>Channel</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="notificationHistory">
+                                        <!-- Dynamic notification history -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -1157,6 +2276,74 @@
                                     <p class="insight-value" id="topTier">Standard</p>
                                     <span class="insight-detail">most used pricing</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Page -->
+                <div id="calendarPage" class="dashboard-page">
+                    <div class="page-header">
+                        <h1>Cleaning Calendar</h1>
+                        <div class="calendar-controls">
+                            <div class="calendar-nav">
+                                <button class="btn btn-secondary" onclick="previousMonth()">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <h2 id="currentMonth">November 2024</h2>
+                                <button class="btn btn-secondary" onclick="nextMonth()">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar-actions">
+                                <button class="btn btn-primary" onclick="showAddBookingModal()">
+                                    <i class="fas fa-plus"></i> Add Booking
+                                </button>
+                                <button class="btn btn-secondary" onclick="toggleCalendarView()">
+                                    <i class="fas fa-th"></i> <span id="viewToggleText">Week View</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-content">
+                        <!-- Calendar Legend -->
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #3182ce;"></span>
+                                <span>Standard Cleaning</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #38a169;"></span>
+                                <span>Deep Cleaning</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #e53e3e;"></span>
+                                <span>Priority/Rush</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #d69e2e;"></span>
+                                <span>Pending</span>
+                            </div>
+                        </div>
+
+                        <!-- Calendar Grid -->
+                        <div class="calendar-wrapper">
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Calendar will be dynamically generated here -->
+                            </div>
+                        </div>
+
+                        <!-- Booking Details Sidebar -->
+                        <div id="bookingDetailsSidebar" class="booking-sidebar">
+                            <div class="sidebar-header">
+                                <h3>Booking Details</h3>
+                                <button class="close-btn" onclick="closeSidebar()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="sidebar-content" id="sidebarContent">
+                                <!-- Booking details will be displayed here -->
                             </div>
                         </div>
                     </div>
@@ -1428,5 +2615,342 @@
     </div>
 
     <script src="js/script.js"></script>
+    
+    <!-- PWA Installation Banner -->
+    <div id="installBanner" class="install-banner">
+        <div class="install-content">
+            <i class="fas fa-mobile-alt"></i>
+            <div class="install-text">
+                <h4>Install Host Helper</h4>
+                <p>Add to your home screen for quick access</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="installApp()">Install</button>
+            <button class="install-dismiss" onclick="dismissInstallBanner()">&times;</button>
+        </div>
+    </div>
+    
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="offline-indicator">
+        <i class="fas fa-wifi-slash"></i>
+        <span>You're offline - changes will sync when reconnected</span>
+    </div>
+    
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed'));
+        }
+        
+        // PWA Install
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallBanner();
+        });
+        
+        function showInstallBanner() {
+            const banner = document.getElementById('installBanner');
+            if (banner && !localStorage.getItem('installDismissed')) {
+                setTimeout(() => {
+                    banner.classList.add('show');
+                }, 2000);
+            }
+        }
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+                dismissInstallBanner();
+            }
+        }
+        
+        function dismissInstallBanner() {
+            document.getElementById('installBanner').classList.remove('show');
+            localStorage.setItem('installDismissed', 'true');
+        }
+        
+        // Offline/Online detection
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').classList.remove('show');
+            showNotification('Back online! Syncing data...', 'success');
+        });
+        
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').classList.add('show');
+        });
+    </script>
+
+    <!-- Property Owner Portal -->
+    <div id="ownerPortal" style="display: none;">
+        <div class="owner-header">
+            <div class="container">
+                <div class="header-wrapper">
+                    <div class="logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Host Helper Clean - Owner Portal</span>
+                    </div>
+                    <div class="owner-nav">
+                        <a href="#" class="owner-nav-link active" data-view="dashboard">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                        <a href="#" class="owner-nav-link" data-view="properties">
+                            <i class="fas fa-building"></i> My Properties
+                        </a>
+                        <a href="#" class="owner-nav-link" data-view="bookings">
+                            <i class="fas fa-calendar-check"></i> Bookings
+                        </a>
+                        <a href="#" class="owner-nav-link" data-view="tracking">
+                            <i class="fas fa-map-marker-alt"></i> Live Tracking
+                        </a>
+                        <a href="#" class="owner-nav-link" data-view="analytics">
+                            <i class="fas fa-chart-line"></i> Analytics
+                        </a>
+                    </div>
+                    <div class="owner-actions">
+                        <button class="notification-btn" onclick="toggleOwnerNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="ownerNotificationCount">0</span>
+                        </button>
+                        <div class="user-menu">
+                            <button class="user-menu-btn" onclick="toggleOwnerMenu()">
+                                <i class="fas fa-user-circle"></i>
+                                <span id="ownerName">Property Owner</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="user-dropdown" id="ownerDropdown">
+                                <a href="#" onclick="showOwnerProfile()">
+                                    <i class="fas fa-user"></i> My Profile
+                                </a>
+                                <a href="#" onclick="showOwnerSettings()">
+                                    <i class="fas fa-cog"></i> Settings
+                                </a>
+                                <a href="#" onclick="switchToHostDashboard()">
+                                    <i class="fas fa-exchange-alt"></i> Switch to Host View
+                                </a>
+                                <a href="#" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="owner-content">
+            <div class="container">
+                <!-- Owner Dashboard View -->
+                <div id="ownerDashboardView" class="owner-view active">
+                    <h1>Welcome Back, <span id="ownerGreeting">Property Owner</span>!</h1>
+                    
+                    <!-- Quick Stats -->
+                    <div class="owner-stats-grid">
+                        <div class="owner-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalProperties">0</h3>
+                                <p>Total Properties</p>
+                            </div>
+                        </div>
+                        <div class="owner-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="upcomingCleanings">0</h3>
+                                <p>Upcoming Cleanings</p>
+                            </div>
+                        </div>
+                        <div class="owner-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgRatingOwner">0.0</h3>
+                                <p>Average Rating</p>
+                            </div>
+                        </div>
+                        <div class="owner-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="monthlySpend">$0</h3>
+                                <p>This Month</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Schedule -->
+                    <div class="owner-section">
+                        <h2>Today's Schedule</h2>
+                        <div id="todayScheduleOwner" class="schedule-timeline">
+                            <!-- Dynamic schedule items -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="owner-section">
+                        <h2>Recent Activity</h2>
+                        <div id="recentActivityOwner" class="activity-feed">
+                            <!-- Dynamic activity items -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties View -->
+                <div id="ownerPropertiesView" class="owner-view">
+                    <div class="view-header">
+                        <h1>My Properties</h1>
+                        <button class="btn btn-primary" onclick="showAddPropertyOwner()">
+                            <i class="fas fa-plus"></i> Add Property
+                        </button>
+                    </div>
+                    
+                    <div class="properties-grid" id="ownerPropertiesGrid">
+                        <!-- Dynamic property cards -->
+                    </div>
+                </div>
+
+                <!-- Bookings View -->
+                <div id="ownerBookingsView" class="owner-view">
+                    <div class="view-header">
+                        <h1>Booking History</h1>
+                        <div class="view-filters">
+                            <select id="ownerBookingFilter" onchange="filterOwnerBookings()">
+                                <option value="all">All Bookings</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <input type="text" id="ownerBookingSearch" placeholder="Search bookings..." 
+                                   onkeyup="searchOwnerBookings()">
+                        </div>
+                    </div>
+                    
+                    <div class="bookings-table">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Property</th>
+                                    <th>Cleaner</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Cost</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ownerBookingsTable">
+                                <!-- Dynamic booking rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Live Tracking View -->
+                <div id="ownerTrackingView" class="owner-view">
+                    <h1>Live Cleaning Tracking</h1>
+                    
+                    <div id="activeCleaningsMap" class="tracking-section">
+                        <!-- Map or active cleanings list -->
+                        <div class="no-active-cleanings">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <p>No cleanings in progress right now</p>
+                        </div>
+                    </div>
+                    
+                    <div id="activeCleaningDetails" class="cleaning-details" style="display: none;">
+                        <!-- Dynamic cleaning details -->
+                    </div>
+                </div>
+
+                <!-- Analytics View -->
+                <div id="ownerAnalyticsView" class="owner-view">
+                    <h1>Property Analytics</h1>
+                    
+                    <div class="analytics-controls">
+                        <select id="ownerAnalyticsPeriod" onchange="updateOwnerAnalytics()">
+                            <option value="week">Last 7 Days</option>
+                            <option value="month" selected>Last 30 Days</option>
+                            <option value="quarter">Last 3 Months</option>
+                            <option value="year">Last Year</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportOwnerReport()">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                    </div>
+                    
+                    <div class="owner-analytics-grid">
+                        <!-- Spending Overview -->
+                        <div class="analytics-card">
+                            <h3>Spending Overview</h3>
+                            <canvas id="ownerSpendingChart"></canvas>
+                        </div>
+                        
+                        <!-- Property Performance -->
+                        <div class="analytics-card">
+                            <h3>Property Performance</h3>
+                            <div id="propertyPerformanceList">
+                                <!-- Dynamic property metrics -->
+                            </div>
+                        </div>
+                        
+                        <!-- Cleaning Frequency -->
+                        <div class="analytics-card">
+                            <h3>Cleaning Frequency</h3>
+                            <canvas id="cleaningFrequencyChart"></canvas>
+                        </div>
+                        
+                        <!-- Cost Breakdown -->
+                        <div class="analytics-card">
+                            <h3>Cost Breakdown</h3>
+                            <div class="cost-breakdown-list">
+                                <div class="cost-item">
+                                    <span>Standard Cleanings</span>
+                                    <span id="standardCostOwner">$0</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Deep Cleanings</span>
+                                    <span id="deepCostOwner">$0</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Priority Cleanings</span>
+                                    <span id="priorityCostOwner">$0</span>
+                                </div>
+                                <div class="cost-item total">
+                                    <span>Total Spend</span>
+                                    <span id="totalCostOwner">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owner Notification Center -->
+    <div id="ownerNotificationCenter" class="notification-center owner">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="close-btn" onclick="toggleOwnerNotifications()">&times;</button>
+        </div>
+        <div class="notification-list" id="ownerNotificationList">
+            <!-- Dynamic notifications -->
+        </div>
+    </div>
 </body>
 </html>

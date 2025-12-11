@@ -1,0 +1,370 @@
+/* Accessibility Enhancements for Host Helper Clean */
+
+/* ============================================
+   FOCUS STATES (Critical for keyboard navigation)
+   ============================================ */
+
+/* Global focus styles */
+*:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default outline and use custom */
+*:focus {
+  outline: none;
+}
+
+/* Button focus states */
+button:focus-visible,
+.btn:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="button"]:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(49, 130, 206, 0.2);
+}
+
+/* Link focus states */
+a:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 2px;
+  text-decoration: underline;
+  background-color: rgba(49, 130, 206, 0.1);
+}
+
+/* Form input focus states */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 0;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+/* Navigation link focus */
+.nav-links a:focus-visible,
+.landing-nav a:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Card focus states */
+.property-card:focus-visible,
+.checklist-card:focus-visible,
+.team-member-card:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 2px;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal close button focus */
+.modal-close:focus-visible,
+.close-button:focus-visible {
+  outline: 3px solid #ef4444;
+  outline-offset: 2px;
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Tab focus for interactive divs */
+div[onclick]:focus-visible,
+div[role="button"]:focus-visible {
+  outline: 3px solid #3182ce;
+  outline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ============================================
+   SKIP LINKS
+   ============================================ */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #3182ce;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SCREEN READER ONLY TEXT
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  button,
+  .btn {
+    border: 2px solid currentColor !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION INDICATORS
+   ============================================ */
+
+/* Show keyboard focus state clearly */
+body.user-is-tabbing *:focus {
+  outline: 3px solid #3182ce !important;
+  outline-offset: 2px !important;
+}
+
+/* ============================================
+   TOUCH TARGET SIZES (Mobile accessibility)
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Ensure minimum 44x44px touch targets */
+  button,
+  .btn,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  .mobile-menu-toggle {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Increase padding for better touch targets */
+  .nav-links a {
+    padding: 12px 20px;
+  }
+}
+
+/* ============================================
+   COLOR CONTRAST IMPROVEMENTS
+   ============================================ */
+
+/* Ensure links are distinguishable */
+a:not(.btn) {
+  text-decoration: underline;
+  text-decoration-color: rgba(49, 130, 206, 0.4);
+  text-underline-offset: 2px;
+}
+
+a:not(.btn):hover {
+  text-decoration-color: currentColor;
+}
+
+/* Make placeholder text more readable */
+::placeholder {
+  color: #718096;
+  opacity: 1;
+}
+
+/* ============================================
+   FORM ACCESSIBILITY
+   ============================================ */
+
+/* Required field indicators */
+input:required + label::after,
+select:required + label::after,
+textarea:required + label::after {
+  content: " *";
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Invalid input styling */
+input:invalid:not(:focus):not(:placeholder-shown),
+select:invalid:not(:focus),
+textarea:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Valid input styling */
+input:valid:not(:focus):not(:placeholder-shown),
+select:valid:not(:focus),
+textarea:valid:not(:focus):not(:placeholder-shown) {
+  border-color: #10b981;
+}
+
+/* ============================================
+   NOTIFICATION ACCESSIBILITY
+   ============================================ */
+
+/* Toast notifications should have role="alert" or aria-live */
+.notification,
+.toast {
+  /* Ensure they're keyboard accessible if closable */
+}
+
+.notification-close:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   MODAL ACCESSIBILITY
+   ============================================ */
+
+/* Modal focus trap styles */
+.modal[aria-hidden="true"] {
+  display: none;
+}
+
+.modal[aria-hidden="false"] {
+  display: flex;
+}
+
+/* Ensure modal backdrop doesn't interfere with focus */
+.modal-backdrop {
+  pointer-events: none;
+}
+
+.modal-content {
+  pointer-events: all;
+}
+
+/* ============================================
+   TABLE ACCESSIBILITY
+   ============================================ */
+
+/* Better table cell padding for readability */
+table th,
+table td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+/* Highlight table rows on focus */
+table tr:focus-within {
+  background-color: rgba(49, 130, 206, 0.05);
+  outline: 2px solid #3182ce;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+/* Ensure loading states are announced */
+[aria-busy="true"] {
+  cursor: wait;
+}
+
+.loading-spinner {
+  /* Should have role="status" and aria-live="polite" */
+}
+
+/* ============================================
+   ERROR MESSAGES
+   ============================================ */
+
+/* Style error messages for visibility */
+.error-message,
+[role="alert"] {
+  padding: 12px;
+  margin: 8px 0;
+  border-left: 4px solid #ef4444;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-radius: 4px;
+}
+
+.error-message:focus {
+  outline: 2px solid #ef4444;
+}
+
+/* ============================================
+   SUCCESS MESSAGES
+   ============================================ */
+
+.success-message {
+  padding: 12px;
+  margin: 8px 0;
+  border-left: 4px solid #10b981;
+  background-color: #f0fdf4;
+  color: #065f46;
+  border-radius: 4px;
+}
+
+/* ============================================
+   PRINT ACCESSIBILITY
+   ============================================ */
+
+@media print {
+  /* Ensure good contrast when printing */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Show link URLs */
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+  
+  /* Hide unnecessary elements */
+  .no-print,
+  nav,
+  .sidebar,
+  button,
+  .modal {
+    display: none !important;
+  }
+}

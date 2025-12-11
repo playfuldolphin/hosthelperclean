@@ -3,23 +3,19 @@ let currentUser = null;
 let properties = [];
 let checklists = [];
 let teamMembers = [];
+let notifications = [];
 
-// Platform Fee Configuration
+// Platform Fee Configuration (Transaction-based like Airbnb)
 const FEE_MODELS = {
     standard: {
-        percentage: 15, // 15% platform fee
+        percentage: 15, // 15% platform fee for all bookings
         label: 'Standard',
-        description: 'Standard platform fee for regular bookings'
-    },
-    premium: {
-        percentage: 20, // 20% for priority/rush jobs
-        label: 'Priority',
-        description: 'Priority service with faster response time'
+        description: 'Standard platform fee - no monthly subscription needed'
     },
     highVolume: {
-        percentage: 10, // 10% for high-volume clients
+        percentage: 10, // 10% for high-volume clients (20+ bookings/month)
         label: 'Volume Discount',
-        description: 'Reduced fee for frequent users'
+        description: 'Automatic discount for 20+ bookings per month'
     }
 };
 
@@ -181,8 +177,8 @@ function handleSignup(event) {
         name: name,
         email: email,
         company: company || null,
-        plan: 'trial',
-        trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // 14 days
+        feeModel: 'standard', // Transaction-based, no subscription
+        totalBookings: 0
     };
     
     localStorage.setItem('authToken', generateId());
@@ -192,7 +188,7 @@ function handleSignup(event) {
     showDashboard();
     
     // Show welcome message
-    showNotification('Welcome to Host Helper Clean! Your 14-day trial has started.');
+    showNotification('Welcome to Host Helper Clean! Start booking cleaners for your properties.');
 }
 
 function logout() {
@@ -219,9 +215,21 @@ function initializeEventListeners() {
     
     // Mobile menu toggle
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    if (mobileToggle) {
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('mobile-open');
+            navLinks.classList.toggle('mobile-open');
+            this.querySelector('i').classList.toggle('fa-bars');
+            this.querySelector('i').classList.toggle('fa-times');
+        });
+        
+        // Close menu when clicking on a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('mobile-open');
+                mobileToggle.querySelector('i').classList.add('fa-bars');
+                mobileToggle.querySelector('i').classList.remove('fa-times');
+            });
         });
     }
     
@@ -273,6 +281,12 @@ function showDashboardPage(page) {
                 break;
             case 'reports':
                 loadAnalytics();
+                break;
+            case 'calendar':
+                generateCalendarGrid();
+                break;
+            case 'notifications':
+                loadNotificationSettings();
                 break;
         }
     }
@@ -1298,35 +1312,25 @@ function getPropertySize(bedrooms) {
 }
 
 function getUserFeeModel(user) {
-    // Determine fee model based on user's booking history
+    // Determine fee model based on user's booking history (monthly)
     if (!user) return 'standard';
     
-    const bookingCount = checklists.filter(c => 
-        c.userId === user.id && c.status === 'completed'
+    // Get this month's completed bookings
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const monthlyBookingCount = checklists.filter(c => 
+        c.userId === user.id && 
+        c.status === 'completed' &&
+        new Date(c.completedAt || c.scheduledDate) >= firstDayOfMonth
     ).length;
     
-    if (bookingCount >= 20) return 'highVolume';
+    // Automatic volume discount at 20+ bookings per month
+    if (monthlyBookingCount >= 20) return 'highVolume';
     return 'standard';
 }
 
-function showPricingType(type) {
-    // Update active tab
-    document.querySelectorAll('.pricing-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Show/hide content
-    document.querySelectorAll('.pricing-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    if (type === 'cleaning') {
-        document.getElementById('cleaningPricing').classList.add('active');
-    } else {
-        document.getElementById('platformPricing').classList.add('active');
-    }
-}
+// Removed pricing type switching - now only transaction-based model
 
 // Rating System Functions
 function showPropertyOwnerRating(checklist) {
@@ -2068,6 +2072,311 @@ function updatePayoutSettings() {
     saveToLocalStorage('payoutSettings', settings);
     showNotification('Payout settings updated');
 }
+
+// Notification System
+function initializeNotifications() {
+    // Load saved notifications
+    notifications = loadFromLocalStorage('notifications') || [];
+    
+    // Check for new events periodically
+    setInterval(checkForNotifications, 30000); // Every 30 seconds
+    
+    // Update notification count
+    updateNotificationBadge();
+    
+    // Load notifications in center
+    loadNotifications();
+}
+
+function createNotification(type, title, message, data = {}) {
+    const notification = {
+        id: generateId(),
+        type: type, // 'booking', 'cleaning', 'payment', 'urgent', 'system'
+        title: title,
+        message: message,
+        data: data,
+        read: false,
+        createdAt: new Date().toISOString(),
+        priority: data.priority || 'normal'
+    };
+    
+    notifications.unshift(notification);
+    saveToLocalStorage('notifications', notifications);
+    
+    // Update UI
+    updateNotificationBadge();
+    loadNotifications();
+    
+    // Show toast notification
+    showToastNotification(notification);
+    
+    // Play notification sound if enabled
+    playNotificationSound();
+    
+    return notification;
+}
+
+function showToastNotification(notification) {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${notification.type}`;
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
+        </div>
+        <div class="toast-content">
+            <h4>${notification.title}</h4>
+            <p>${notification.message}</p>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'booking': 'calendar-check',
+        'cleaning': 'broom',
+        'payment': 'dollar-sign',
+        'urgent': 'exclamation-triangle',
+        'system': 'info-circle',
+        'rating': 'star',
+        'supplies': 'box'
+    };
+    return icons[type] || 'bell';
+}
+
+function toggleNotificationCenter() {
+    const center = document.getElementById('notificationCenter');
+    center.classList.toggle('show');
+    
+    // Close when clicking outside
+    if (center.classList.contains('show')) {
+        setTimeout(() => {
+            document.addEventListener('click', closeNotificationCenter);
+        }, 100);
+    }
+}
+
+function closeNotificationCenter(e) {
+    if (!e.target.closest('.notification-center') && !e.target.closest('.notification-btn')) {
+        document.getElementById('notificationCenter').classList.remove('show');
+        document.removeEventListener('click', closeNotificationCenter);
+    }
+}
+
+function updateNotificationBadge() {
+    const unreadCount = notifications.filter(n => !n.read).length;
+    const badge = document.getElementById('notificationCount');
+    
+    if (badge) {
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+}
+
+function loadNotifications(filter = 'all') {
+    const container = document.getElementById('notificationList');
+    if (!container) return;
+    
+    let filtered = notifications;
+    
+    if (filter === 'unread') {
+        filtered = notifications.filter(n => !n.read);
+    } else if (filter === 'urgent') {
+        filtered = notifications.filter(n => n.priority === 'high' || n.type === 'urgent');
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `<p class="empty-notifications">No ${filter === 'all' ? '' : filter} notifications</p>`;
+        return;
+    }
+    
+    container.innerHTML = filtered.slice(0, 20).map(notification => `
+        <div class="notification-item ${notification.read ? 'read' : 'unread'}" onclick="handleNotificationClick('${notification.id}')">
+            <div class="notification-icon ${notification.type}">
+                <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
+            </div>
+            <div class="notification-content">
+                <h4>${notification.title}</h4>
+                <p>${notification.message}</p>
+                <span class="notification-time">${getTimeAgo(notification.createdAt)}</span>
+            </div>
+            ${!notification.read ? '<span class="unread-indicator"></span>' : ''}
+        </div>
+    `).join('');
+}
+
+function filterNotifications(filter) {
+    // Update active tab
+    document.querySelectorAll('.notif-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    loadNotifications(filter);
+}
+
+function handleNotificationClick(notificationId) {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (!notification) return;
+    
+    // Mark as read
+    notification.read = true;
+    saveToLocalStorage('notifications', notifications);
+    updateNotificationBadge();
+    
+    // Handle action based on type
+    switch(notification.type) {
+        case 'booking':
+            showDashboardPage('integrations');
+            break;
+        case 'cleaning':
+            showDashboardPage('checklists');
+            break;
+        case 'payment':
+            showDashboardPage('billing');
+            break;
+        case 'rating':
+            if (notification.data.checklistId) {
+                viewChecklist(notification.data.checklistId);
+            }
+            break;
+    }
+    
+    // Close notification center
+    document.getElementById('notificationCenter').classList.remove('show');
+}
+
+function markAllAsRead() {
+    notifications.forEach(n => n.read = true);
+    saveToLocalStorage('notifications', notifications);
+    updateNotificationBadge();
+    loadNotifications();
+}
+
+function checkForNotifications() {
+    // Check for new bookings
+    const recentBookings = loadFromLocalStorage('bookings') || [];
+    const lastCheck = loadFromLocalStorage('lastNotificationCheck') || new Date(0).toISOString();
+    
+    recentBookings.forEach(booking => {
+        if (new Date(booking.createdAt || booking.checkIn) > new Date(lastCheck)) {
+            createNotification(
+                'booking',
+                'New Booking',
+                `New booking for ${booking.propertyName} on ${new Date(booking.checkIn).toLocaleDateString()}`,
+                { bookingId: booking.id, priority: 'normal' }
+            );
+        }
+    });
+    
+    // Check for completed cleanings needing rating
+    checklists.forEach(checklist => {
+        if (checklist.status === 'completed' && 
+            !checklist.rating && 
+            new Date(checklist.completedAt) > new Date(lastCheck)) {
+            createNotification(
+                'rating',
+                'Rate Your Cleaning',
+                `Please rate the cleaning service for your property`,
+                { checklistId: checklist.id, priority: 'normal' }
+            );
+        }
+    });
+    
+    // Check for low supplies
+    const suppliesReported = checklists.filter(c => 
+        c.suppliesNeeded && 
+        new Date(c.completedAt || c.scheduledDate) > new Date(lastCheck)
+    );
+    
+    suppliesReported.forEach(checklist => {
+        const property = properties.find(p => p.id === checklist.propertyId);
+        createNotification(
+            'supplies',
+            'Supplies Needed',
+            `${property?.name || 'Property'} needs supply restocking`,
+            { propertyId: checklist.propertyId, priority: 'high' }
+        );
+    });
+    
+    saveToLocalStorage('lastNotificationCheck', new Date().toISOString());
+}
+
+function playNotificationSound() {
+    // In production, play a notification sound
+    if (loadFromLocalStorage('notificationSound') !== false) {
+        // new Audio('/sounds/notification.mp3').play();
+    }
+}
+
+// Email/SMS Templates
+function getEmailTemplates() {
+    return {
+        bookingConfirmation: {
+            subject: 'Cleaning Scheduled - {propertyName}',
+            body: `
+                <h2>Cleaning Confirmed</h2>
+                <p>Your cleaning has been scheduled for {propertyName}.</p>
+                <p><strong>Date:</strong> {date}</p>
+                <p><strong>Time:</strong> {time}</p>
+                <p><strong>Cleaner:</strong> {cleanerName}</p>
+                <p><strong>Total Cost:</strong> ${'{totalCost}'}</p>
+                <p>You can track the cleaning progress using this link: {trackingLink}</p>
+            `
+        },
+        cleaningReminder: {
+            subject: 'Cleaning Tomorrow - {propertyName}',
+            body: `
+                <h2>Cleaning Reminder</h2>
+                <p>This is a reminder that your property {propertyName} is scheduled for cleaning tomorrow.</p>
+                <p><strong>Date:</strong> {date}</p>
+                <p><strong>Time:</strong> {time}</p>
+                <p>Please ensure the property is accessible for our cleaning team.</p>
+            `
+        },
+        cleaningComplete: {
+            subject: 'Cleaning Completed - {propertyName}',
+            body: `
+                <h2>Cleaning Completed</h2>
+                <p>The cleaning for {propertyName} has been completed.</p>
+                <p><strong>Completed at:</strong> {completedTime}</p>
+                <p><strong>Photos:</strong> {photoCount} verification photos uploaded</p>
+                <p>Please take a moment to rate your cleaning service: {ratingLink}</p>
+            `
+        },
+        payoutProcessed: {
+            subject: 'Payment Processed - ${'{amount}'}',
+            body: `
+                <h2>Payment Sent</h2>
+                <p>Your payment has been processed.</p>
+                <p><strong>Amount:</strong> ${'{amount}'}</p>
+                <p><strong>Cleanings:</strong> {cleaningCount}</p>
+                <p><strong>Period:</strong> {period}</p>
+                <p>The funds will be available in your account within 1-3 business days.</p>
+            `
+        }
+    };
+}
+
+// Initialize notifications when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (currentUser) {
+        initializeNotifications();
+    }
+});
 
 // Integration Functions
 function loadIntegrations() {
@@ -3205,4 +3514,1772 @@ function hireCleaner(cleanerId) {
     
     // Switch to team view
     document.querySelector('[onclick="switchTeamView(\'myteam\')"]').click();
+}
+
+// Calendar Functionality
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let calendarView = 'month'; // 'month' or 'week'
+let selectedBookingId = null;
+
+function generateCalendarGrid() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    if (!calendarGrid) return;
+    
+    calendarGrid.innerHTML = '';
+    
+    if (calendarView === 'month') {
+        generateMonthView();
+    } else {
+        generateWeekView();
+    }
+}
+
+function generateMonthView() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    calendarGrid.classList.remove('week-view');
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const prevLastDay = new Date(currentYear, currentMonth, 0);
+    const firstDayIndex = firstDay.getDay();
+    const lastDayIndex = lastDay.getDay();
+    const nextDays = 7 - lastDayIndex - 1;
+    
+    // Update month display
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    
+    // Add day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayHeaders.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'calendar-header';
+        header.textContent = day;
+        calendarGrid.appendChild(header);
+    });
+    
+    // Add previous month days
+    for (let x = firstDayIndex; x > 0; x--) {
+        const dayDiv = createDayElement(prevLastDay.getDate() - x + 1, 'other-month', 
+            currentMonth - 1 < 0 ? currentYear - 1 : currentYear,
+            currentMonth - 1 < 0 ? 11 : currentMonth - 1);
+        calendarGrid.appendChild(dayDiv);
+    }
+    
+    // Add current month days
+    const today = new Date();
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+        const isToday = today.getDate() === i && today.getMonth() === currentMonth && 
+                       today.getFullYear() === currentYear;
+        const dayDiv = createDayElement(i, isToday ? 'today' : '', currentYear, currentMonth);
+        calendarGrid.appendChild(dayDiv);
+    }
+    
+    // Add next month days
+    for (let j = 1; j <= nextDays; j++) {
+        const dayDiv = createDayElement(j, 'other-month',
+            currentMonth + 1 > 11 ? currentYear + 1 : currentYear,
+            currentMonth + 1 > 11 ? 0 : currentMonth + 1);
+        calendarGrid.appendChild(dayDiv);
+    }
+}
+
+function generateWeekView() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    calendarGrid.classList.add('week-view');
+    
+    // Get current week
+    const today = new Date();
+    const currentDay = today.getDay();
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - currentDay);
+    
+    // Update month display to show week range
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    document.getElementById('currentMonth').textContent = 
+        `${monthNames[weekStart.getMonth()]} ${weekStart.getDate()} - ${monthNames[weekEnd.getMonth()]} ${weekEnd.getDate()}, ${weekEnd.getFullYear()}`;
+    
+    // Add time column header
+    const timeHeader = document.createElement('div');
+    timeHeader.className = 'calendar-header';
+    timeHeader.textContent = 'Time';
+    calendarGrid.appendChild(timeHeader);
+    
+    // Add day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 0; i < 7; i++) {
+        const header = document.createElement('div');
+        header.className = 'calendar-header';
+        const headerDate = new Date(weekStart);
+        headerDate.setDate(weekStart.getDate() + i);
+        header.innerHTML = `${dayHeaders[i]}<br>${headerDate.getDate()}`;
+        calendarGrid.appendChild(header);
+    }
+    
+    // Add time slots (8 AM to 8 PM)
+    for (let hour = 8; hour <= 20; hour++) {
+        // Add time label
+        const timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = `${hour > 12 ? hour - 12 : hour}:00 ${hour >= 12 ? 'PM' : 'AM'}`;
+        calendarGrid.appendChild(timeSlot);
+        
+        // Add day slots
+        for (let day = 0; day < 7; day++) {
+            const daySlot = document.createElement('div');
+            daySlot.className = 'week-day';
+            const slotDate = new Date(weekStart);
+            slotDate.setDate(weekStart.getDate() + day);
+            daySlot.dataset.date = formatDateForData(slotDate);
+            daySlot.dataset.hour = hour;
+            
+            // Add bookings for this time slot
+            const dayBookings = getBookingsForTimeSlot(slotDate, hour);
+            dayBookings.forEach(booking => {
+                const bookingEl = createBookingElement(booking);
+                daySlot.appendChild(bookingEl);
+            });
+            
+            // Make slot droppable
+            daySlot.addEventListener('dragover', handleDragOver);
+            daySlot.addEventListener('drop', handleDrop);
+            daySlot.addEventListener('dragleave', handleDragLeave);
+            
+            calendarGrid.appendChild(daySlot);
+        }
+    }
+}
+
+function getBookingsForTimeSlot(date, hour) {
+    const dateStr = formatDateForData(date);
+    let bookings = getFromLocalStorage('bookings') || [];
+    
+    return bookings.filter(booking => {
+        const bookingDate = booking.date || booking.scheduledDate;
+        if (!bookingDate || !bookingDate.startsWith(dateStr)) return false;
+        
+        const bookingTime = booking.time || '10:00';
+        const bookingHour = parseInt(bookingTime.split(':')[0]);
+        return bookingHour === hour;
+    });
+}
+
+function formatDateForData(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'Not set';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date';
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+function calculateTotalPrice(booking) {
+    // Base prices
+    let basePrice = 80; // Standard cleaning
+    if (booking.type === 'deep') basePrice = 150;
+    if (booking.type === 'priority') basePrice = 100;
+    
+    // Add platform fee (15% standard)
+    const platformFee = basePrice * 0.15;
+    return (basePrice + platformFee).toFixed(2);
+}
+
+function createDayElement(day, className, year, month) {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = `calendar-day ${className}`;
+    dayDiv.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    
+    const dayNumber = document.createElement('div');
+    dayNumber.className = 'day-number';
+    dayNumber.textContent = day;
+    dayDiv.appendChild(dayNumber);
+    
+    const bookingsContainer = document.createElement('div');
+    bookingsContainer.className = 'day-bookings';
+    dayDiv.appendChild(bookingsContainer);
+    
+    // Add bookings for this day
+    const dayBookings = getBookingsForDay(year, month, day);
+    dayBookings.forEach(booking => {
+        const bookingEl = createBookingElement(booking);
+        bookingsContainer.appendChild(bookingEl);
+    });
+    
+    // Make day droppable
+    dayDiv.addEventListener('dragover', handleDragOver);
+    dayDiv.addEventListener('drop', handleDrop);
+    dayDiv.addEventListener('dragleave', handleDragLeave);
+    
+    // Click to add new booking
+    dayDiv.addEventListener('click', function(e) {
+        if (!e.target.classList.contains('booking-item')) {
+            showAddBookingModal(this.dataset.date);
+        }
+    });
+    
+    return dayDiv;
+}
+
+function createBookingElement(booking) {
+    const bookingEl = document.createElement('div');
+    bookingEl.className = `booking-item ${booking.type || 'standard'}`;
+    bookingEl.textContent = `${booking.time || '10:00'} - ${booking.property || booking.propertyName}`;
+    bookingEl.dataset.bookingId = booking.id;
+    bookingEl.draggable = true;
+    
+    // Add drag events
+    bookingEl.addEventListener('dragstart', handleDragStart);
+    bookingEl.addEventListener('dragend', handleDragEnd);
+    
+    // Click to view details
+    bookingEl.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showBookingDetails(booking.id);
+    });
+    
+    return bookingEl;
+}
+
+function getBookingsForDay(year, month, day) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    let bookings = getFromLocalStorage('bookings') || [];
+    
+    return bookings.filter(booking => {
+        const bookingDate = booking.date || booking.scheduledDate;
+        return bookingDate && bookingDate.startsWith(dateStr);
+    });
+}
+
+// Navigation functions
+function previousMonth() {
+    currentMonth--;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+    generateCalendarGrid();
+}
+
+function nextMonth() {
+    currentMonth++;
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    generateCalendarGrid();
+}
+
+function toggleCalendarView() {
+    const viewToggleText = document.getElementById('viewToggleText');
+    if (calendarView === 'month') {
+        calendarView = 'week';
+        viewToggleText.textContent = 'Month View';
+    } else {
+        calendarView = 'month';
+        viewToggleText.textContent = 'Week View';
+    }
+    generateCalendarGrid();
+}
+
+// Drag and Drop handlers
+let draggedBooking = null;
+
+function handleDragStart(e) {
+    draggedBooking = e.target;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.innerHTML);
+}
+
+function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+    return false;
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    
+    const dropTarget = e.currentTarget;
+    dropTarget.classList.remove('drag-over');
+    
+    if (draggedBooking && dropTarget.classList.contains('calendar-day')) {
+        const bookingId = draggedBooking.dataset.bookingId;
+        const newDate = dropTarget.dataset.date;
+        
+        // Update booking date
+        updateBookingDate(bookingId, newDate);
+        
+        // Regenerate calendar
+        generateCalendarGrid();
+        showNotification('Booking rescheduled successfully!');
+    }
+    
+    return false;
+}
+
+function updateBookingDate(bookingId, newDate) {
+    let bookings = getFromLocalStorage('bookings') || [];
+    const booking = bookings.find(b => b.id === bookingId);
+    
+    if (booking) {
+        booking.date = newDate + 'T' + (booking.time || '10:00');
+        booking.scheduledDate = booking.date;
+        saveToLocalStorage('bookings', bookings);
+    }
+}
+
+// Booking details sidebar
+function showBookingDetails(bookingId) {
+    const bookings = getFromLocalStorage('bookings') || [];
+    const booking = bookings.find(b => b.id === bookingId);
+    
+    if (!booking) return;
+    
+    const sidebarContent = document.getElementById('sidebarContent');
+    sidebarContent.innerHTML = `
+        <div class="booking-detail-item">
+            <h4>Property</h4>
+            <p>${booking.property || booking.propertyName}</p>
+        </div>
+        <div class="booking-detail-item">
+            <h4>Date & Time</h4>
+            <p>${formatDate(booking.date || booking.scheduledDate)}</p>
+            <p>${booking.time || '10:00 AM'}</p>
+        </div>
+        <div class="booking-detail-item">
+            <h4>Cleaning Type</h4>
+            <p>${booking.type === 'deep' ? 'Deep Cleaning' : booking.type === 'priority' ? 'Priority/Rush' : 'Standard Cleaning'}</p>
+        </div>
+        <div class="booking-detail-item">
+            <h4>Assigned Cleaner</h4>
+            <p>${booking.cleanerName || 'Not assigned'}</p>
+        </div>
+        <div class="booking-detail-item">
+            <h4>Status</h4>
+            <p>${booking.status || 'Scheduled'}</p>
+        </div>
+        <div class="booking-detail-item">
+            <h4>Total Price</h4>
+            <p>$${booking.totalPrice || calculateTotalPrice(booking)}</p>
+        </div>
+        
+        <div class="booking-actions">
+            <button class="btn btn-primary" onclick="editBooking('${bookingId}')">
+                <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-danger" onclick="cancelBooking('${bookingId}')">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('bookingDetailsSidebar').classList.add('active');
+    selectedBookingId = bookingId;
+}
+
+function closeSidebar() {
+    document.getElementById('bookingDetailsSidebar').classList.remove('active');
+    selectedBookingId = null;
+}
+
+function editBooking(bookingId) {
+    // Would open edit modal
+    showNotification('Edit functionality coming soon!');
+}
+
+function cancelBooking(bookingId) {
+    if (confirm('Are you sure you want to cancel this booking?')) {
+        let bookings = getFromLocalStorage('bookings') || [];
+        bookings = bookings.filter(b => b.id !== bookingId);
+        saveToLocalStorage('bookings', bookings);
+        
+        closeSidebar();
+        generateCalendarGrid();
+        showNotification('Booking cancelled successfully!');
+    }
+}
+
+// Show add booking modal with pre-selected date
+function showAddBookingModal(date = null) {
+    // Use existing modal or create new one
+    const modal = document.getElementById('bookingModal');
+    if (modal) {
+        // Pre-fill date if provided
+        if (date) {
+            const dateInput = document.getElementById('bookingDate');
+            if (dateInput) {
+                dateInput.value = date;
+            }
+        }
+        modal.style.display = 'flex';
+    } else {
+        // For now, show notification that booking can be added from bookings page
+        showNotification('Please use the Bookings page to add new bookings');
+    }
+}
+
+// Initialize calendar when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Existing initialization code...
+    
+    // Add calendar initialization
+    if (document.getElementById('calendarGrid')) {
+        generateCalendarGrid();
+    }
+});
+
+// Notification System Functions
+const notificationTemplates = {
+    booking_confirmation: {
+        subject: "Cleaning Confirmed for {{property_name}} on {{date}}",
+        body: `Hi {{recipient_name}},
+
+Your cleaning has been confirmed for {{property_name}}.
+
+Details:
+- Date: {{date}}
+- Time: {{time}}
+- Cleaner: {{cleaner_name}}
+- Type: {{cleaning_type}}
+- Total Cost: {{total_cost}}
+
+You can track your cleaning status in real-time through your dashboard.
+
+Best regards,
+Host Helper Clean Team`
+    },
+    reminder_24h: {
+        subject: "Reminder: Cleaning Tomorrow at {{property_name}}",
+        body: `Hi {{recipient_name}},
+
+This is a friendly reminder that your cleaning is scheduled for tomorrow.
+
+Property: {{property_name}}
+Date: {{date}}
+Time: {{time}}
+Cleaner: {{cleaner_name}}
+
+If you need to reschedule, please do so at least 4 hours before the scheduled time.
+
+Best regards,
+Host Helper Clean Team`
+    },
+    cleaning_started: {
+        subject: "Cleaning Started at {{property_name}}",
+        body: `Hi {{recipient_name}},
+
+Your cleaner has arrived and started the cleaning at {{property_name}}.
+
+Started at: {{start_time}}
+Cleaner: {{cleaner_name}}
+
+You'll receive another notification with photos once the cleaning is complete.
+
+Best regards,
+Host Helper Clean Team`
+    },
+    cleaning_completed: {
+        subject: "Cleaning Complete at {{property_name}}",
+        body: `Hi {{recipient_name}},
+
+Great news! The cleaning at {{property_name}} has been completed.
+
+Completed at: {{end_time}}
+Duration: {{duration}}
+Cleaner: {{cleaner_name}}
+
+Photos of the completed cleaning are attached to this email. You can also view them in your dashboard.
+
+Please take a moment to rate this cleaning to help us maintain quality standards.
+
+Best regards,
+Host Helper Clean Team`
+    },
+    payment_receipt: {
+        subject: "Payment Receipt - {{property_name}} Cleaning",
+        body: `Hi {{recipient_name}},
+
+Thank you for your payment. Here's your receipt:
+
+Invoice #: {{invoice_number}}
+Property: {{property_name}}
+Date: {{date}}
+Amount Paid: {{total_cost}}
+
+Breakdown:
+- Cleaning Service: {{cleaning_cost}}
+- Platform Fee ({{fee_percentage}}%): {{platform_fee}}
+
+Total: {{total_cost}}
+
+A PDF receipt is attached for your records.
+
+Best regards,
+Host Helper Clean Team`
+    },
+    weekly_summary: {
+        subject: "Your Weekly Host Helper Clean Summary",
+        body: `Hi {{recipient_name}},
+
+Here's your weekly summary for {{week_range}}:
+
+Total Cleanings: {{total_cleanings}}
+Properties Cleaned: {{properties_cleaned}}
+Total Revenue: {{total_revenue}}
+Average Rating: {{average_rating}}
+
+Top Performing Properties:
+{{top_properties_list}}
+
+Upcoming Cleanings:
+{{upcoming_cleanings_list}}
+
+View detailed analytics in your dashboard.
+
+Best regards,
+Host Helper Clean Team`
+    }
+};
+
+function loadNotificationSettings() {
+    // Load saved settings
+    const savedSettings = getFromLocalStorage('notificationSettings') || {};
+    
+    // Apply saved settings to form
+    if (savedSettings.email) {
+        document.getElementById('fromEmail').value = savedSettings.email.fromEmail || '';
+        document.getElementById('replyEmail').value = savedSettings.email.replyEmail || '';
+        document.getElementById('emailProvider').value = savedSettings.email.provider || 'sendgrid';
+        document.getElementById('emailApiKey').value = savedSettings.email.apiKey || '';
+    }
+    
+    if (savedSettings.sms) {
+        document.getElementById('fromPhone').value = savedSettings.sms.fromPhone || '';
+        document.getElementById('smsProvider').value = savedSettings.sms.provider || 'twilio';
+        document.getElementById('smsSid').value = savedSettings.sms.sid || '';
+        document.getElementById('smsToken').value = savedSettings.sms.token || '';
+    }
+    
+    // Load notification history
+    loadNotificationHistory();
+}
+
+function saveNotificationSettings() {
+    const settings = {
+        email: {
+            fromEmail: document.getElementById('fromEmail').value,
+            replyEmail: document.getElementById('replyEmail').value,
+            provider: document.getElementById('emailProvider').value,
+            apiKey: document.getElementById('emailApiKey').value
+        },
+        sms: {
+            fromPhone: document.getElementById('fromPhone').value,
+            provider: document.getElementById('smsProvider').value,
+            sid: document.getElementById('smsSid').value,
+            token: document.getElementById('smsToken').value
+        }
+    };
+    
+    saveToLocalStorage('notificationSettings', settings);
+    showNotification('Notification settings saved!');
+}
+
+function loadTemplate(templateKey) {
+    const template = notificationTemplates[templateKey];
+    if (template) {
+        document.getElementById('templateSubject').value = template.subject;
+        document.getElementById('templateBody').value = template.body;
+    }
+}
+
+function previewTemplate() {
+    const subject = document.getElementById('templateSubject').value;
+    const body = document.getElementById('templateBody').value;
+    
+    // Replace variables with sample data
+    const sampleData = {
+        recipient_name: "John Doe",
+        property_name: "Sunset Villa",
+        date: "November 25, 2024",
+        time: "10:00 AM",
+        cleaner_name: "Sarah Johnson",
+        cleaning_type: "Standard Cleaning",
+        total_cost: "$92.00",
+        cleaning_cost: "$80.00",
+        platform_fee: "$12.00",
+        fee_percentage: "15",
+        start_time: "10:00 AM",
+        end_time: "12:30 PM",
+        duration: "2.5 hours",
+        invoice_number: "INV-2024-0125",
+        week_range: "Nov 18-24, 2024",
+        total_cleanings: "12",
+        properties_cleaned: "8",
+        total_revenue: "$1,104.00",
+        average_rating: "4.8",
+        tracking_link: "https://hosthelperclean.com/track/abc123"
+    };
+    
+    let previewSubject = subject;
+    let previewBody = body;
+    
+    // Replace all variables
+    Object.keys(sampleData).forEach(key => {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        previewSubject = previewSubject.replace(regex, sampleData[key]);
+        previewBody = previewBody.replace(regex, sampleData[key]);
+    });
+    
+    // Show preview modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal" onclick="this.closest('.modal').remove()">&times;</span>
+            <h2>Email Preview</h2>
+            <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <p><strong>Subject:</strong> ${previewSubject}</p>
+            </div>
+            <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; white-space: pre-line;">
+                ${previewBody}
+            </div>
+            <button class="btn btn-primary" onclick="this.closest('.modal').remove()" style="margin-top: 1rem;">Close Preview</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function testNotifications() {
+    // Show test notification modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" onclick="this.closest('.modal').remove()">&times;</span>
+            <h2>Send Test Notification</h2>
+            <div class="form-group">
+                <label>Notification Type</label>
+                <select id="testType" class="form-control">
+                    <option value="booking_confirmation">Booking Confirmation</option>
+                    <option value="reminder_24h">24-Hour Reminder</option>
+                    <option value="cleaning_started">Cleaning Started</option>
+                    <option value="cleaning_completed">Cleaning Completed</option>
+                    <option value="payment_receipt">Payment Receipt</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Send To</label>
+                <input type="email" id="testEmail" class="form-control" placeholder="test@example.com">
+            </div>
+            <div class="form-group">
+                <label>Send SMS To (optional)</label>
+                <input type="tel" id="testPhone" class="form-control" placeholder="+1 (555) 123-4567">
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-primary" onclick="sendTestNotification()">Send Test</button>
+                <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function sendTestNotification() {
+    const type = document.getElementById('testType').value;
+    const email = document.getElementById('testEmail').value;
+    const phone = document.getElementById('testPhone').value;
+    
+    if (!email) {
+        showNotification('Please enter an email address', 'error');
+        return;
+    }
+    
+    // Simulate sending notification
+    const notification = {
+        id: generateId(),
+        type: type,
+        recipient: email,
+        channel: phone ? 'Email & SMS' : 'Email',
+        status: 'Sent',
+        timestamp: new Date().toISOString()
+    };
+    
+    // Add to history
+    let history = getFromLocalStorage('notificationHistory') || [];
+    history.unshift(notification);
+    if (history.length > 100) history = history.slice(0, 100); // Keep last 100
+    saveToLocalStorage('notificationHistory', history);
+    
+    // Close modal and show success
+    document.querySelector('.modal').remove();
+    showNotification('Test notification sent successfully!');
+    loadNotificationHistory();
+}
+
+function loadNotificationHistory() {
+    const history = getFromLocalStorage('notificationHistory') || [];
+    const tbody = document.getElementById('notificationHistory');
+    
+    if (history.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: #718096;">
+                    No notifications sent yet
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tbody.innerHTML = history.slice(0, 20).map(notification => {
+        const date = new Date(notification.timestamp);
+        const typeLabel = notification.type.split('_').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+        
+        return `
+            <tr>
+                <td>${date.toLocaleString()}</td>
+                <td>${typeLabel}</td>
+                <td>${notification.recipient}</td>
+                <td>${notification.channel}</td>
+                <td>
+                    <span class="status-badge ${notification.status.toLowerCase()}">
+                        ${notification.status}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm" onclick="resendNotification('${notification.id}')">
+                        <i class="fas fa-redo"></i> Resend
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function resendNotification(notificationId) {
+    showNotification('Notification resent successfully!');
+}
+
+// Automated notification triggers
+function setupNotificationTriggers() {
+    // Check for 24-hour reminders every hour
+    setInterval(() => {
+        checkFor24HourReminders();
+    }, 3600000); // 1 hour
+    
+    // Check for weekly summaries
+    setInterval(() => {
+        checkForWeeklySummary();
+    }, 86400000); // 24 hours
+}
+
+function checkFor24HourReminders() {
+    const bookings = getFromLocalStorage('bookings') || [];
+    const now = new Date();
+    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    
+    bookings.forEach(booking => {
+        const bookingDate = new Date(booking.date || booking.scheduledDate);
+        const timeDiff = bookingDate - now;
+        
+        // If booking is between 23-25 hours away
+        if (timeDiff > 23 * 60 * 60 * 1000 && timeDiff < 25 * 60 * 60 * 1000) {
+            if (!booking.reminderSent) {
+                sendAutomatedNotification('reminder_24h', booking);
+                booking.reminderSent = true;
+                saveToLocalStorage('bookings', bookings);
+            }
+        }
+    });
+}
+
+function checkForWeeklySummary() {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    
+    // Check if it's the configured day (default: Monday = 1)
+    if (dayOfWeek === 1) {
+        const lastSummary = getFromLocalStorage('lastWeeklySummary');
+        const lastSummaryDate = lastSummary ? new Date(lastSummary) : null;
+        
+        // If we haven't sent a summary in the last 6 days
+        if (!lastSummaryDate || (now - lastSummaryDate) > 6 * 24 * 60 * 60 * 1000) {
+            sendWeeklySummary();
+            saveToLocalStorage('lastWeeklySummary', now.toISOString());
+        }
+    }
+}
+
+function sendAutomatedNotification(type, data) {
+    // Check if this notification type is enabled
+    const triggerEnabled = document.getElementById(`trigger${type.split('_').map(w => 
+        w.charAt(0).toUpperCase() + w.slice(1)).join('')}`);
+    
+    if (!triggerEnabled || !triggerEnabled.checked) return;
+    
+    // Create notification record
+    const notification = {
+        id: generateId(),
+        type: type,
+        recipient: data.hostEmail || 'host@example.com',
+        channel: 'Email',
+        status: 'Sent',
+        timestamp: new Date().toISOString()
+    };
+    
+    // Add to history
+    let history = getFromLocalStorage('notificationHistory') || [];
+    history.unshift(notification);
+    saveToLocalStorage('notificationHistory', history);
+    
+    // In production, this would actually send the email/SMS
+    console.log('Sending automated notification:', type, data);
+}
+
+function sendWeeklySummary() {
+    // Calculate weekly stats
+    const bookings = getFromLocalStorage('bookings') || [];
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - 7);
+    
+    const weeklyBookings = bookings.filter(b => {
+        const bookingDate = new Date(b.date || b.scheduledDate);
+        return bookingDate >= weekStart;
+    });
+    
+    const summaryData = {
+        total_cleanings: weeklyBookings.length,
+        properties_cleaned: [...new Set(weeklyBookings.map(b => b.property))].length,
+        total_revenue: weeklyBookings.reduce((sum, b) => sum + (b.totalPrice || 92), 0),
+        average_rating: 4.8 // Would calculate from actual ratings
+    };
+    
+    sendAutomatedNotification('weekly_summary', summaryData);
+}
+
+// Initialize notification triggers when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupNotificationTriggers();
+});
+
+// Property Owner Portal Functions
+let currentOwnerView = 'dashboard';
+let ownerProperties = [];
+let ownerBookings = [];
+
+function initializeOwnerPortal() {
+    // Load owner data
+    loadOwnerData();
+    
+    // Set up navigation
+    document.querySelectorAll('.owner-nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const view = this.dataset.view;
+            showOwnerView(view);
+        });
+    });
+    
+    // Load initial view
+    showOwnerView('dashboard');
+}
+
+function loadOwnerData() {
+    // In a real app, this would fetch from API based on logged-in user
+    const currentUser = getFromLocalStorage('currentUser') || {};
+    
+    // Load owner's properties
+    const allProperties = getFromLocalStorage('properties') || [];
+    ownerProperties = allProperties.filter(p => p.ownerId === currentUser.id || p.owner === currentUser.name);
+    
+    // Load owner's bookings
+    const allBookings = getFromLocalStorage('bookings') || [];
+    ownerBookings = allBookings.filter(b => {
+        return ownerProperties.some(p => p.id === b.propertyId || p.name === b.property);
+    });
+    
+    // Update UI
+    document.getElementById('ownerName').textContent = currentUser.name || 'Property Owner';
+    document.getElementById('ownerGreeting').textContent = currentUser.name || 'Property Owner';
+}
+
+function showOwnerView(view) {
+    // Update navigation
+    document.querySelectorAll('.owner-nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.view === view) {
+            link.classList.add('active');
+        }
+    });
+    
+    // Hide all views
+    document.querySelectorAll('.owner-view').forEach(v => {
+        v.classList.remove('active');
+    });
+    
+    // Show selected view
+    const viewElement = document.getElementById(`owner${view.charAt(0).toUpperCase() + view.slice(1)}View`);
+    if (viewElement) {
+        viewElement.classList.add('active');
+        
+        // Load view-specific data
+        switch(view) {
+            case 'dashboard':
+                loadOwnerDashboard();
+                break;
+            case 'properties':
+                loadOwnerProperties();
+                break;
+            case 'bookings':
+                loadOwnerBookings();
+                break;
+            case 'tracking':
+                loadOwnerTracking();
+                break;
+            case 'analytics':
+                loadOwnerAnalytics();
+                break;
+        }
+    }
+    
+    currentOwnerView = view;
+}
+
+function loadOwnerDashboard() {
+    // Update stats
+    document.getElementById('totalProperties').textContent = ownerProperties.length;
+    
+    const upcomingCleanings = ownerBookings.filter(b => {
+        const bookingDate = new Date(b.date || b.scheduledDate);
+        return bookingDate >= new Date() && b.status !== 'cancelled';
+    }).length;
+    document.getElementById('upcomingCleanings').textContent = upcomingCleanings;
+    
+    // Calculate average rating
+    const ratings = ownerBookings.filter(b => b.rating).map(b => b.rating);
+    const avgRating = ratings.length > 0 ? 
+        (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '0.0';
+    document.getElementById('avgRatingOwner').textContent = avgRating;
+    
+    // Calculate monthly spend
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    const monthlyBookings = ownerBookings.filter(b => {
+        const bookingDate = new Date(b.date || b.scheduledDate);
+        return bookingDate >= thisMonth;
+    });
+    const monthlySpend = monthlyBookings.reduce((sum, b) => sum + (b.totalPrice || 92), 0);
+    document.getElementById('monthlySpend').textContent = `$${monthlySpend.toFixed(2)}`;
+    
+    // Load today's schedule
+    loadTodaySchedule();
+    
+    // Load recent activity
+    loadRecentActivity();
+}
+
+function loadTodaySchedule() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const todayBookings = ownerBookings.filter(b => {
+        const bookingDate = new Date(b.date || b.scheduledDate);
+        bookingDate.setHours(0, 0, 0, 0);
+        return bookingDate.getTime() === today.getTime();
+    }).sort((a, b) => {
+        const timeA = a.time || '10:00';
+        const timeB = b.time || '10:00';
+        return timeA.localeCompare(timeB);
+    });
+    
+    const scheduleHtml = todayBookings.length > 0 ? todayBookings.map(booking => `
+        <div class="schedule-item">
+            <div class="schedule-time">${booking.time || '10:00 AM'}</div>
+            <div class="schedule-details">
+                <h4>${booking.property || booking.propertyName}</h4>
+                <p>Cleaner: ${booking.cleanerName || 'Not assigned'} • ${booking.type || 'Standard'} cleaning</p>
+            </div>
+            <div class="schedule-status">
+                <span class="status-badge ${booking.status || 'scheduled'}">${booking.status || 'Scheduled'}</span>
+            </div>
+        </div>
+    `).join('') : `
+        <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <p>No cleanings scheduled for today</p>
+        </div>
+    `;
+    
+    document.getElementById('todayScheduleOwner').innerHTML = scheduleHtml;
+}
+
+function loadRecentActivity() {
+    // Create sample activity data
+    const activities = [
+        {
+            icon: 'check-circle',
+            color: 'green',
+            text: 'Cleaning completed at Sunset Villa',
+            time: '2 hours ago'
+        },
+        {
+            icon: 'star',
+            color: 'yellow',
+            text: 'You rated a cleaning 5 stars',
+            time: '1 day ago'
+        },
+        {
+            icon: 'calendar-plus',
+            color: 'blue',
+            text: 'New cleaning scheduled for Beach House',
+            time: '2 days ago'
+        },
+        {
+            icon: 'dollar-sign',
+            color: 'green',
+            text: 'Payment processed for Mountain Cabin cleaning',
+            time: '3 days ago'
+        }
+    ];
+    
+    const activityHtml = activities.map(activity => `
+        <div class="activity-item">
+            <div class="activity-icon" style="background: ${getColorCode(activity.color)}20; color: ${getColorCode(activity.color)}">
+                <i class="fas fa-${activity.icon}"></i>
+            </div>
+            <div class="activity-content">
+                <p>${activity.text}</p>
+                <span class="activity-time">${activity.time}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('recentActivityOwner').innerHTML = activityHtml;
+}
+
+function getColorCode(color) {
+    const colors = {
+        green: '#38a169',
+        yellow: '#d69e2e',
+        blue: '#3182ce',
+        red: '#e53e3e'
+    };
+    return colors[color] || '#718096';
+}
+
+function loadOwnerProperties() {
+    const propertiesHtml = ownerProperties.length > 0 ? ownerProperties.map(property => `
+        <div class="property-card">
+            <img src="${property.image || 'https://via.placeholder.com/300x200'}" 
+                 alt="${property.name}" class="property-image">
+            <div class="property-details">
+                <h3>${property.name}</h3>
+                <div class="property-info">
+                    <div class="property-info-item">
+                        <i class="fas fa-bed"></i>
+                        <span>${property.bedrooms || 2} bedrooms</span>
+                    </div>
+                    <div class="property-info-item">
+                        <i class="fas fa-bath"></i>
+                        <span>${property.bathrooms || 2} bathrooms</span>
+                    </div>
+                    <div class="property-info-item">
+                        <i class="fas fa-ruler-combined"></i>
+                        <span>${property.sqft || 1200} sqft</span>
+                    </div>
+                </div>
+                <div class="property-actions">
+                    <button class="btn btn-primary" onclick="scheduleCleaningForProperty('${property.id}')">
+                        Schedule Cleaning
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewPropertyDetails('${property.id}')">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('') : `
+        <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <i class="fas fa-building" style="font-size: 4rem; color: #cbd5e0; margin-bottom: 1rem; display: block;"></i>
+            <p style="color: #718096;">No properties added yet</p>
+            <button class="btn btn-primary" onclick="showAddPropertyOwner()" style="margin-top: 1rem;">
+                <i class="fas fa-plus"></i> Add Your First Property
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('ownerPropertiesGrid').innerHTML = propertiesHtml;
+}
+
+function loadOwnerBookings() {
+    const bookingsHtml = ownerBookings.length > 0 ? ownerBookings
+        .sort((a, b) => new Date(b.date || b.scheduledDate) - new Date(a.date || a.scheduledDate))
+        .map(booking => {
+            const date = new Date(booking.date || booking.scheduledDate);
+            const status = booking.status || 'scheduled';
+            const statusClass = status === 'completed' ? 'success' : 
+                               status === 'cancelled' ? 'danger' : 'warning';
+            
+            return `
+                <tr>
+                    <td>${date.toLocaleDateString()}</td>
+                    <td>${booking.property || booking.propertyName}</td>
+                    <td>${booking.cleanerName || 'Not assigned'}</td>
+                    <td>${booking.type || 'Standard'}</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td>$${booking.totalPrice || 92}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="viewBookingDetails('${booking.id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        ${status === 'completed' && !booking.rating ? `
+                            <button class="btn btn-sm btn-primary" onclick="rateBooking('${booking.id}')">
+                                <i class="fas fa-star"></i> Rate
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `;
+        }).join('') : `
+        <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: #718096;">
+                No bookings found
+            </td>
+        </tr>
+    `;
+    
+    document.getElementById('ownerBookingsTable').innerHTML = bookingsHtml;
+}
+
+function filterOwnerBookings() {
+    const filter = document.getElementById('ownerBookingFilter').value;
+    let filteredBookings = [...ownerBookings];
+    
+    if (filter !== 'all') {
+        filteredBookings = filteredBookings.filter(b => {
+            const status = b.status || 'scheduled';
+            if (filter === 'upcoming') return status === 'scheduled' || status === 'confirmed';
+            if (filter === 'completed') return status === 'completed';
+            if (filter === 'cancelled') return status === 'cancelled';
+            return true;
+        });
+    }
+    
+    // Update the table with filtered results
+    ownerBookings = filteredBookings;
+    loadOwnerBookings();
+    ownerBookings = getFromLocalStorage('bookings') || []; // Reset to full list
+}
+
+function searchOwnerBookings() {
+    const searchTerm = document.getElementById('ownerBookingSearch').value.toLowerCase();
+    
+    if (searchTerm) {
+        const filteredBookings = ownerBookings.filter(b => {
+            const property = (b.property || b.propertyName || '').toLowerCase();
+            const cleaner = (b.cleanerName || '').toLowerCase();
+            return property.includes(searchTerm) || cleaner.includes(searchTerm);
+        });
+        
+        const tempBookings = [...ownerBookings];
+        ownerBookings = filteredBookings;
+        loadOwnerBookings();
+        ownerBookings = tempBookings;
+    } else {
+        loadOwnerBookings();
+    }
+}
+
+function loadOwnerTracking() {
+    // Check for active cleanings
+    const activeCleanings = ownerBookings.filter(b => {
+        const status = b.status || 'scheduled';
+        return status === 'in_progress' || status === 'started';
+    });
+    
+    if (activeCleanings.length > 0) {
+        document.getElementById('activeCleaningsMap').innerHTML = `
+            <div class="active-cleanings-list">
+                <h3>Cleanings in Progress</h3>
+                ${activeCleanings.map(cleaning => `
+                    <div class="active-cleaning-card" onclick="showCleaningDetails('${cleaning.id}')">
+                        <div class="cleaning-status">
+                            <div class="status-indicator active"></div>
+                            <span>In Progress</span>
+                        </div>
+                        <div class="cleaning-info">
+                            <h4>${cleaning.property || cleaning.propertyName}</h4>
+                            <p>Cleaner: ${cleaning.cleanerName || 'Not assigned'}</p>
+                            <p>Started: ${cleaning.startTime || '30 minutes ago'}</p>
+                        </div>
+                        <div class="cleaning-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <span>60% Complete</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        document.getElementById('activeCleaningDetails').style.display = 'block';
+    } else {
+        document.getElementById('activeCleaningDetails').style.display = 'none';
+    }
+}
+
+function loadOwnerAnalytics() {
+    const period = document.getElementById('ownerAnalyticsPeriod')?.value || 'month';
+    
+    // Calculate analytics based on period
+    const now = new Date();
+    let startDate = new Date();
+    
+    switch(period) {
+        case 'week':
+            startDate.setDate(now.getDate() - 7);
+            break;
+        case 'month':
+            startDate.setMonth(now.getMonth() - 1);
+            break;
+        case 'quarter':
+            startDate.setMonth(now.getMonth() - 3);
+            break;
+        case 'year':
+            startDate.setFullYear(now.getFullYear() - 1);
+            break;
+    }
+    
+    const periodBookings = ownerBookings.filter(b => {
+        const bookingDate = new Date(b.date || b.scheduledDate);
+        return bookingDate >= startDate && bookingDate <= now;
+    });
+    
+    // Calculate costs
+    const standardCost = periodBookings
+        .filter(b => !b.type || b.type === 'standard')
+        .reduce((sum, b) => sum + (b.totalPrice || 92), 0);
+    
+    const deepCost = periodBookings
+        .filter(b => b.type === 'deep')
+        .reduce((sum, b) => sum + (b.totalPrice || 172.5), 0);
+    
+    const priorityCost = periodBookings
+        .filter(b => b.type === 'priority')
+        .reduce((sum, b) => sum + (b.totalPrice || 115), 0);
+    
+    const totalCost = standardCost + deepCost + priorityCost;
+    
+    // Update UI
+    document.getElementById('standardCostOwner').textContent = `$${standardCost.toFixed(2)}`;
+    document.getElementById('deepCostOwner').textContent = `$${deepCost.toFixed(2)}`;
+    document.getElementById('priorityCostOwner').textContent = `$${priorityCost.toFixed(2)}`;
+    document.getElementById('totalCostOwner').textContent = `$${totalCost.toFixed(2)}`;
+    
+    // Update property performance
+    updatePropertyPerformance(periodBookings);
+}
+
+function updatePropertyPerformance(bookings) {
+    const propertyStats = {};
+    
+    bookings.forEach(booking => {
+        const property = booking.property || booking.propertyName;
+        if (!propertyStats[property]) {
+            propertyStats[property] = {
+                cleanings: 0,
+                totalCost: 0,
+                ratings: []
+            };
+        }
+        
+        propertyStats[property].cleanings++;
+        propertyStats[property].totalCost += booking.totalPrice || 92;
+        if (booking.rating) {
+            propertyStats[property].ratings.push(booking.rating);
+        }
+    });
+    
+    const performanceHtml = Object.entries(propertyStats)
+        .sort((a, b) => b[1].cleanings - a[1].cleanings)
+        .map(([property, stats]) => {
+            const avgRating = stats.ratings.length > 0 ?
+                (stats.ratings.reduce((a, b) => a + b, 0) / stats.ratings.length).toFixed(1) : 'N/A';
+            
+            return `
+                <div class="property-performance-item">
+                    <div class="performance-header">
+                        <h4>${property}</h4>
+                        <span class="performance-rating">
+                            <i class="fas fa-star"></i> ${avgRating}
+                        </span>
+                    </div>
+                    <div class="performance-stats">
+                        <span>${stats.cleanings} cleanings</span>
+                        <span>$${stats.totalCost.toFixed(2)} spent</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    
+    document.getElementById('propertyPerformanceList').innerHTML = performanceHtml || 
+        '<p style="color: #718096;">No data available for this period</p>';
+}
+
+// Owner Portal Action Functions
+function toggleOwnerNotifications() {
+    const center = document.getElementById('ownerNotificationCenter');
+    center.classList.toggle('active');
+}
+
+function toggleOwnerMenu() {
+    const dropdown = document.getElementById('ownerDropdown');
+    dropdown.classList.toggle('active');
+}
+
+function showOwnerProfile() {
+    showNotification('Profile settings coming soon!');
+}
+
+function showOwnerSettings() {
+    showNotification('Owner settings coming soon!');
+}
+
+function switchToHostDashboard() {
+    document.getElementById('ownerPortal').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+}
+
+function showAddPropertyOwner() {
+    // Reuse existing add property modal
+    showAddPropertyModal();
+}
+
+function scheduleCleaningForProperty(propertyId) {
+    const property = ownerProperties.find(p => p.id === propertyId);
+    if (property) {
+        showNotification(`Opening scheduler for ${property.name}...`);
+    }
+}
+
+function viewPropertyDetails(propertyId) {
+    const property = ownerProperties.find(p => p.id === propertyId);
+    if (property) {
+        showNotification(`Loading details for ${property.name}...`);
+    }
+}
+
+function viewBookingDetails(bookingId) {
+    const booking = ownerBookings.find(b => b.id === bookingId);
+    if (booking) {
+        showBookingDetails(bookingId);
+    }
+}
+
+function rateBooking(bookingId) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" onclick="this.closest('.modal').remove()">&times;</span>
+            <h2>Rate Your Cleaning</h2>
+            <div class="rating-section">
+                <div class="star-rating" id="starRating">
+                    ${[1,2,3,4,5].map(i => `
+                        <i class="fas fa-star" data-rating="${i}" onclick="setRating(${i})"></i>
+                    `).join('')}
+                </div>
+                <p class="rating-text" id="ratingText">Click to rate</p>
+            </div>
+            <div class="form-group">
+                <label>Comments (optional)</label>
+                <textarea id="ratingComments" class="form-control" rows="4" 
+                          placeholder="Share your experience..."></textarea>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-primary" onclick="submitRating('${bookingId}')">Submit Rating</button>
+                <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function setRating(rating) {
+    document.querySelectorAll('#starRating .fa-star').forEach((star, index) => {
+        if (index < rating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+    
+    const texts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+    document.getElementById('ratingText').textContent = texts[rating - 1];
+}
+
+function submitRating(bookingId) {
+    const rating = document.querySelectorAll('#starRating .fa-star.active').length;
+    const comments = document.getElementById('ratingComments').value;
+    
+    if (rating === 0) {
+        showNotification('Please select a rating', 'error');
+        return;
+    }
+    
+    // Update booking with rating
+    let bookings = getFromLocalStorage('bookings') || [];
+    const booking = bookings.find(b => b.id === bookingId);
+    if (booking) {
+        booking.rating = rating;
+        booking.ratingComments = comments;
+        booking.ratedAt = new Date().toISOString();
+        saveToLocalStorage('bookings', bookings);
+    }
+    
+    // Close modal and refresh
+    document.querySelector('.modal').remove();
+    showNotification('Thank you for your feedback!');
+    loadOwnerBookings();
+}
+
+function showCleaningDetails(cleaningId) {
+    const cleaning = ownerBookings.find(b => b.id === cleaningId);
+    if (!cleaning) return;
+    
+    document.getElementById('activeCleaningDetails').innerHTML = `
+        <h3>Cleaning Details - ${cleaning.property || cleaning.propertyName}</h3>
+        <div class="cleaning-tracker">
+            <div class="tracker-steps">
+                <div class="tracker-step completed">
+                    <div class="step-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="step-info">
+                        <h4>Cleaner Arrived</h4>
+                        <p>10:00 AM</p>
+                    </div>
+                </div>
+                <div class="tracker-step active">
+                    <div class="step-icon">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="step-info">
+                        <h4>Cleaning in Progress</h4>
+                        <p>Started 30 minutes ago</p>
+                    </div>
+                </div>
+                <div class="tracker-step">
+                    <div class="step-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="step-info">
+                        <h4>Photo Verification</h4>
+                        <p>Pending</p>
+                    </div>
+                </div>
+                <div class="tracker-step">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="step-info">
+                        <h4>Completed</h4>
+                        <p>Estimated 11:30 AM</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cleaner-contact">
+                <h4>Your Cleaner</h4>
+                <div class="cleaner-info">
+                    <img src="https://via.placeholder.com/50" alt="Cleaner" style="border-radius: 50%;">
+                    <div>
+                        <p><strong>${cleaning.cleanerName || 'Not assigned'}</strong></p>
+                        <p style="color: #718096;">
+                            <i class="fas fa-star" style="color: #d69e2e;"></i> 4.8 rating
+                        </p>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="contactCleaner('${cleaning.cleanerId}')">
+                    <i class="fas fa-comment"></i> Send Message
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function exportOwnerReport() {
+    showNotification('Generating report...');
+    // In production, this would generate and download a PDF/Excel report
+}
+
+// Add CSS for property performance
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+    .property-performance-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .property-performance-item:last-child {
+        border-bottom: none;
+    }
+    
+    .performance-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .performance-header h4 {
+        margin: 0;
+        color: #2d3748;
+    }
+    
+    .performance-rating {
+        color: #d69e2e;
+        font-weight: 600;
+    }
+    
+    .performance-stats {
+        display: flex;
+        gap: 1rem;
+        color: #718096;
+        font-size: 0.875rem;
+    }
+    
+    .star-rating {
+        font-size: 2rem;
+        color: #cbd5e0;
+        cursor: pointer;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    
+    .star-rating .fa-star {
+        margin: 0 0.25rem;
+        transition: color 0.2s;
+    }
+    
+    .star-rating .fa-star:hover,
+    .star-rating .fa-star.active {
+        color: #d69e2e;
+    }
+    
+    .rating-text {
+        text-align: center;
+        color: #718096;
+        margin-bottom: 1rem;
+    }
+    
+    .cleaning-tracker {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-top: 1.5rem;
+    }
+    
+    .tracker-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+    
+    .tracker-steps::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 50px;
+        right: 50px;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 0;
+    }
+    
+    .tracker-step {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .step-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        color: #a0aec0;
+    }
+    
+    .tracker-step.completed .step-icon {
+        background: #38a169;
+        color: white;
+    }
+    
+    .tracker-step.active .step-icon {
+        background: #3182ce;
+        color: white;
+    }
+    
+    .step-info h4 {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #2d3748;
+    }
+    
+    .step-info p {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #718096;
+    }
+    
+    .cleaner-contact {
+        background: #f7fafc;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    
+    .cleaner-contact h4 {
+        margin: 0 0 1rem 0;
+        color: #2d3748;
+    }
+    
+    .cleaner-info {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .active-cleanings-list {
+        width: 100%;
+    }
+    
+    .active-cleaning-card {
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+    }
+    
+    .active-cleaning-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cleaning-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e53e3e;
+    }
+    
+    .status-indicator.active {
+        background: #38a169;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .cleaning-progress {
+        margin-top: 1rem;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: #3182ce;
+        transition: width 0.3s;
+    }
+`;
+document.head.appendChild(styleElement);
+
+// Initialize owner portal when switching to it
+function showOwnerPortal() {
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('cleanerPortal').style.display = 'none';
+    document.getElementById('ownerPortal').style.display = 'block';
+    
+    initializeOwnerPortal();
+}
+
+// Update navigation to show calendar
+function navigateTo(page) {
+    // Hide all pages
+    document.querySelectorAll('.dashboard-page').forEach(p => p.style.display = 'none');
+    
+    // Show requested page
+    const pageElement = document.getElementById(page + 'Page');
+    if (pageElement) {
+        pageElement.style.display = 'block';
+        
+        // Initialize calendar if navigating to calendar page
+        if (page === 'calendar') {
+            generateCalendarGrid();
+        }
+    }
+    
+    // Update active nav
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.page === page) {
+            link.classList.add('active');
+        }
+    });
 }
